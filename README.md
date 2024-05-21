@@ -312,3 +312,44 @@ on va la réponse : Status: 200 OK
     "password": "pwd"
   }
 }
+
+## Logique signup authController
+
+1. authController.js
+````
+import User from '../models/userModels.js';
+
+export const signup = async (req, res, next) => {
+    const { username, email, password } = req.body;
+    const newUser = new User({ username, email, password });
+    await newUser.save();
+    res.status(201).json({ message: 'User created successfully' });
+}
+````
+2. On test avec thunder :
+Status: 201 Created
+
+{  "message": "User created successfully"}
+
+3. vérifier dans mongoDB si cela a créer un new user.
+
+4. On peut tester les meg d'erreur :
+
+usename unique ou requis...
+ex: 
+errmsg: 'E11000 duplicate key error collection: basic-auth.users index: username_1 dup key: { username: "user1" }',
+
+5. Pour voir le msg d'erreur dans thunderClient
+
+````
+export const signup = async (req, res, next) => {
+    const { username, email, password } = req.body;
+    const newUser = new User({ username, email, password});
+    try {
+        await newUser.save();
+        res.status(201).json({ message: 'User created successfully' });
+      } catch (error) {
+        next(error);
+      }
+};
+````
