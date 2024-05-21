@@ -76,3 +76,47 @@ import dotenv from 'dotenv';
 ````
 
 puis tester le serveur
+
+# connecter à MongoDB
+
+1. créer un dossier config puis db.js
+
+````
+import mongoose from 'mongoose';
+
+const connectDB = async () => {
+try {
+    const conn = await mongoose.connect(process.env.VITE_DB_CONNECTION_STRING);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+} catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exit(1);
+}
+};
+
+ export default connectDB;
+ ````
+ 2. dans .env
+
+ ````
+VITE_DB_CONNECTION_STRING="votre lien de connexion mongoDB"
+ ````
+
+ 3. Dans index.js
+
+ ````
+    import connectDB from './config/db.js';
+
+    connectDB();
+ ````
+
+ 4. Installer mongoose sur le server 
+
+ https://www.npmjs.com/package/mongoose
+ npm install mongoose
+
+5. Vérifer la connexion :
+
+[nodemon] starting `node api/index.js`
+Server listening on port 3000
+MongoDB Connected:......
