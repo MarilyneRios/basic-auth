@@ -6,9 +6,9 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const port = process.env.NODE_ENV
+const port = process.env.PORT
 
-// server on port process.env.NODE_ENV
+// server on port process.env.PORT
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
   }); 

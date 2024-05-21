@@ -47,7 +47,6 @@ Pour lancer le serveur :
 Dans la console : 
 ````
 starting `node api/index.js`
-Server listening on port 3000
 ````
 pour vérifer avec le navigateur : http://localhost:3000/ 
 vous pouvez lire hello world
@@ -67,12 +66,27 @@ npm install dotenv --save
 3/ créer le fichier .env à la racine
 
 ````
-NODE_ENV=3000
+PORT=3000
 ````
 4/ dans index.js
 
 ````
+import express from 'express';
 import dotenv from 'dotenv';
+
+dotenv.config();
+const app = express();
+const port = process.env.PORT
+
+// server on port process.env.PORT
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+  }); 
+
+// respond with "hello world" when a GET request is made to the homepage
+app.get('/', function(req, res) {
+    res.send('hello world');
+  });
 ````
 
 puis tester le serveur
@@ -120,3 +134,46 @@ VITE_DB_CONNECTION_STRING="votre lien de connexion mongoDB"
 [nodemon] starting `node api/index.js`
 Server listening on port 3000
 MongoDB Connected:......
+
+# User model
+
+1. Créer un dossier models
+
+2. Créer un fichier userModel.js
+
+````
+import mongoose from 'mongoose';
+
+// Définition du Schéma user
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    profilePicture: {
+      type: String,
+      default:
+        'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg',
+    },
+  },
+  { timestamps: true }
+);
+
+//  Création du Modèle user
+const User = mongoose.model('User', userSchema);
+
+export default User;
+````
+
+ { timestamps: true } => ajoute automatiquement deux champs au schéma : createdAt et updatedAt
