@@ -353,3 +353,20 @@ export const signup = async (req, res, next) => {
       }
 };
 ````
+# pbm de mot de passe lisible dans MongoDB
+Ceci est un pbm car si qlq a acces à la dataBase, on peut lire les passwords des users. Et cela représente une faille de sécurité pour les informations sensibles des users.
+
+1. Crypter les passwords avec bcryptjs :
+
+https://www.npmjs.com/package/bcryptjs
+
+npm install bcryptjs
+
+1. authController
+
+import bcryptjs from 'bcryptjs';
+
+const hashedPassword = bcryptjs.hashSync(password, 10);
+const newUser = new User({ username, email, password: hashedPassword });
+
+2. index.js
