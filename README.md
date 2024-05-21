@@ -2,10 +2,11 @@
 
 # installation du serveur
 
- 1. npm init -y
+1.  npm init -y
 
 Pour créer le package.json:
-````
+
+```
 {
   "name": "basic-auth",
   "version": "1.0.0",
@@ -21,9 +22,10 @@ Pour créer le package.json:
   "author": "",
   "license": "ISC"
 }
-````
-"type": "module", => exportée à l’aide du mot-clé export 
-et importe  à l’aide du mot-clé import
+```
+
+"type": "module", => exportée à l’aide du mot-clé export
+et importe à l’aide du mot-clé import
 
 2. créer un dossier api puis un fichier index.js
 
@@ -31,24 +33,27 @@ et importe  à l’aide du mot-clé import
 
 https://expressjs.com/fr/starter/installing.html
 
- npm install express
+npm install express
 
 4. index.js :
 
-````
+```
 
-````
+```
+
 Pour lancer le serveur :
 1/ si vous avez installer nodemon (https://www.npmjs.com/package/nodemon)
 => nodemon api/index.js
-2/ sinon 
+2/ sinon
 => node api/index.js
 
-Dans la console : 
-````
+Dans la console :
+
+```
 starting `node api/index.js`
-````
-pour vérifer avec le navigateur : http://localhost:3000/ 
+```
+
+pour vérifer avec le navigateur : http://localhost:3000/
 vous pouvez lire hello world
 
 5. Cacher les données sensibles
@@ -65,12 +70,13 @@ npm install dotenv --save
 
 3/ créer le fichier .env à la racine
 
-````
+```
 PORT=3000
-````
+```
+
 4/ dans index.js
 
-````
+```
 import express from 'express';
 import dotenv from 'dotenv';
 
@@ -81,13 +87,13 @@ const port = process.env.PORT
 // server on port process.env.PORT
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
-  }); 
+  });
 
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function(req, res) {
     res.send('hello world');
   });
-````
+```
 
 puis tester le serveur
 
@@ -95,7 +101,7 @@ puis tester le serveur
 
 1. créer un dossier config puis db.js
 
-````
+```
 import mongoose from 'mongoose';
 
 const connectDB = async () => {
@@ -109,25 +115,26 @@ try {
 };
 
  export default connectDB;
- ````
- 2. dans .env
+```
 
- ````
+2.  dans .env
+
+```
 VITE_DB_CONNECTION_STRING="votre lien de connexion mongoDB"
- ````
+```
 
- 3. Dans index.js
+3.  Dans index.js
 
- ````
-    import connectDB from './config/db.js';
+```
+   import connectDB from './config/db.js';
 
-    connectDB();
- ````
+   connectDB();
+```
 
- 4. Installer mongoose sur le server 
+4.  Installer mongoose sur le server
 
- https://www.npmjs.com/package/mongoose
- npm install mongoose
+https://www.npmjs.com/package/mongoose
+npm install mongoose
 
 5. Vérifer la connexion :
 
@@ -141,7 +148,7 @@ MongoDB Connected:......
 
 2. Créer un fichier userModel.js
 
-````
+```
 import mongoose from 'mongoose';
 
 // Définition du Schéma user
@@ -174,6 +181,61 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.model('User', userSchema);
 
 export default User;
+```
+
+{ timestamps: true } => ajoute automatiquement deux champs au schéma : createdAt et updatedAt
+
+# route API
+
+1.  Créer un dossier routes
+
+Chaque route correspond à un endpoint spécifique que les clients peuvent appeler. Les routes utilisent généralement les contrôleurs pour gérer les requêtes.
+
+2. Créer un fichier userRoutes.js
+
+```
+ import express from 'express';
+
+ const router = express.Router();
+
+ router.get('/', (req, res) => {
+     res.json({message :'hello world'});
+   });
+
+ export default router;
+```
+
+3. Dans index.js :
+
+```
+import userRoutes from './routes/userRoute.js'
+app.use('/api/user', userRoutes);
+```
+
+4. tester la route :
+
+http://localhost:3000/api/user
+
+Vous devez lire quelque comme ceci :{"message":"hello world"}.
+
+5. Créer un dossier controllers
+   Les contrôleurs sont responsables de traiter les requêtes, interagir avec les modèles (base de données), et renvoyer les réponses appropriées.
+
+6. Créer un fichier userController.js
+````
+import express from 'express';
+import {
+    display,
+ } from '../controllers/userController.js';
+
+const router = express.Router();
+
+router.get('/', display);
+
+export default router;
 ````
 
- { timestamps: true } => ajoute automatiquement deux champs au schéma : createdAt et updatedAt
+7. tests
+
+http://localhost:3000/api/user = {"message":"API is working!"}
+
