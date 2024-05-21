@@ -239,3 +239,76 @@ export default router;
 
 http://localhost:3000/api/user = {"message":"API is working!"}
 
+# Sign-up API route
+
+1. Pour l'auth, on crée 2 fichiers indépendants :
+
+authRoute.js et authController.js
+
+````
+//authRoutes
+
+import express from 'express';
+import { signin, signup, signout } from '../controllers/authController.js';
+
+const router = express.Router();
+
+router.post('/signup', signup);
+router.post('/signin', signin);
+router.get('/signout', signout);
+
+export default router;
+````
+
+et 
+
+````
+//authConttroler.js
+import User from '../models/userModels.js';
+
+export const signup = async (req, res, next) => {
+    console.log(req.body);
+}
+
+export const signin = async (req, res, next) => {
+    console.log(req.body);
+}
+
+export const signout = (req, res) => {
+    console.log(req.body);
+    res.json({ message: 'Inscription réussie', data: req.body });
+}
+````
+
+2. test
+
+thunderClient > body >json
+
+{
+  "username": "user1",
+  "email":"email@email.com",
+  "password": "pwd"
+}
+
+post http://localhost:3000/api/auth/signup => undefined
+
+faut ajouter dans index.js : **app.use(express.json());** pour permettre d'accéder directement aux données JSON via req.body.
+
+- Dans la console :
+
+ {
+  "username": "user1",
+  "email":"email@email.com",
+  "password": "pwd"
+}
+
+- Dans thunderClient:
+on va la réponse : Status: 200 OK
+{
+  "message": "Inscription réussie",
+  "data": {
+    "username": "user1",
+    "email": "email@email.com",
+    "password": "pwd"
+  }
+}
