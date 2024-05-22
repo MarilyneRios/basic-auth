@@ -369,4 +369,21 @@ import bcryptjs from 'bcryptjs';
 const hashedPassword = bcryptjs.hashSync(password, 10);
 const newUser = new User({ username, email, password: hashedPassword });
 
-2. index.js
+2. test et lire dans mongoDB.
+
+# middleware errors
+
+1. créer un dossier utils ou middlewares
+
+2. Puis un fichier error.js
+
+Cette fonction crée un nouvel objet d’erreur avec un code d’état et un message spécifiques.
+````
+export const errorHandler = (statusCode, message) => {
+  const error = new Error();
+  error.statusCode = statusCode;
+  error.message = message;
+  return error;
+};
+````
+
