@@ -387,3 +387,89 @@ export const errorHandler = (statusCode, message) => {
 };
 ````
 
+# signIn route
+
+on vérifie l'identité du user avec l'email et le password.
+
+- ps: 
+**errorHandler** permet de personnaliser le message d'erreur.
+
+````
+import { errorHandler } from '../utils/error.js';
+next(errorHandler(404, 'User not found'))
+````
+
+**compareSync** comparer les passwords (mongoDB et saisie)
+````
+ const validPassword = bcryptjs.compareSync(password, validUser.password);
+````
+ La bonne pratique est de ne pas dire au user que le password est mauvais car une personne mal intensionée sait alors qu'il doit trouver le password.
+
+ ## Créer le token et le mettre dans un cookie:
+
+ Afin d'éviter d'utiliser le ID de la database.
+
+https://www.npmjs.com/package/jsonwebtoken
+
+````
+import jwt from 'jsonwebtoken';
+````
+````
+ const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+````
+````
+res
+      .cookie('access_token', token, { httpOnly: true,})
+     .status(200)
+      .json(rest);
+````
+- Dans le .env :
+
+JWT_SECRET="chouefihqjcoqjofiefhieh"
+
+-tester avec thunderClient:
+
+ post: http://localhost:3000/api/auth/signin
+  body:
+ json
+ {  "email":"email2@email.com",
+  "password": "pwd"}
+
+> response: 
+  200 ok 
+  {
+  "_id": "664cbcf77aa1grhtrrhc2f99e",
+  "username": "user2",
+  "email": "email2@email.com",
+  "profilePicture": "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
+  "createdAt": "2024-05-21T15:25:43.691Z",
+  "updatedAt": "2024-05-21T15:25:43.691Z",
+  "__v": 0
+}
+> dans cookie :
+access_token
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NGNiY2Y3N2FhMTZlNzViODQyZjk5ZSIsImlhdCI6MTcxNjM4Mzg5MX0.p-sAyeSzZNKHuNfYCvO_rGXxnzB4gnRcgYYfgLhtg5A
+
+**Ne pas laisser le password côté client**
+````
+    const { password: hashedPassword, ...rest } = validUser._doc;
+````
+On sépare le password du reste des infos du user.
+Avec ._doc, on renvoie que les infos nécessaires
+````
+.json(rest);
+````
+
+- date de validité du cookie :
+````
+const expiryDate = new Date(Date.now() + 3600000); // 1 heure
+````
+````
+.cookie('access_token', token, { httpOnly: true, expires: expiryDate })
+````
+
+- test
+Dans le header de la response:
+il y a une date pour le cookie :
+
+Wed, 22 May 2024 13:35:53 GMT

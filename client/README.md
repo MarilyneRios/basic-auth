@@ -434,3 +434,5 @@ Dans la phrase d'error :
   {error && (typeof error === "string" ? error : "Le Pseudo ou l'email est déjà utilisé!")}
 </p>
 ````
+
+# signIn design
