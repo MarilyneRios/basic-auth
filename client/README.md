@@ -1,5 +1,5 @@
 # React + Vite
- 
+
 1. Installation Frontend
 
 npm create vite@latest client
@@ -17,7 +17,8 @@ npm create vite@latest client
 - npx tailwindcss init -p
 
 - tailwind.config.js :
-````
+
+```
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -29,20 +30,21 @@ export default {
   },
   plugins: [],
 }`
-````
+```
 
 - index.css :
 
 Suprrimer toutes les lignes et copier coller ceci :
 
-````
+```
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-````
+```
 
 3. App.jsx :
-````
+
+```
 function App() {
 
   return (
@@ -53,10 +55,11 @@ function App() {
 }
 
 export default App
-````
+```
 
 4. index.html :`
-````
+
+```
 <!doctype html>
 <html lang="en">
   <head>
@@ -70,22 +73,23 @@ export default App
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-````
+```
+
 # Creation des pages
 
 1. Créer un dossier pages dans src puis les fichiers suivantes :
-(rfc pour le React.js code snippets)
-About.js, Home.jsx, Profile.jsx, SignIn.jsx et SgnUp.jsx
+   (rfc pour le React.js code snippets)
+   About.js, Home.jsx, Profile.jsx, SignIn.jsx et SgnUp.jsx
 
 2. npm i react-router-dom
 
-pour rn savoir plus  : https://www.npmjs.com/package/react-router-dom
+pour rn savoir plus : https://www.npmjs.com/package/react-router-dom
 
 Un routage déclaratif , une sorte de plan pour les applications web React.
 
-3. App.jsx 
+3. App.jsx
 
-````
+```
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -107,13 +111,14 @@ function App() {
         <Route path='/profile' element={<Profile />} />
       </Routes>
      </BrowserRouter>
-    
+
   )
 }
 
 export default App
 
-````
+```
+
 pour tester les routes, dans le navigateur :
 
 http://localhost:5173/about
@@ -123,14 +128,15 @@ http://localhost:5173/profile ect.
 
 1. Créer un dossier components dans src puis le fichier Header.jsx
 
-2. Ajouter le Header dans App.jsx pour le voir sur toutes les pages. 
-````
+2. Ajouter le Header dans App.jsx pour le voir sur toutes les pages.
+
+```
 import Header from './components/Header';
 
 function App() {
 
   return (
-    
+
      <BrowserRouter>
      <Header/>
       <Routes>
@@ -141,15 +147,16 @@ function App() {
         <Route path='/profile' element={<Profile />} />
       </Routes>
      </BrowserRouter>
-    
+
   )
 }
 
 export default App
-````
+```
+
 3. Header.jsx :
 
-````
+```
 import { Link } from 'react-router-dom';
 import Logo from '../assets/logoDevBlue.png';
 import { useState } from 'react';
@@ -199,36 +206,32 @@ export default function Header() {
     </div>
   );
 }
-````
+```
 
-# SignUp.jsx  design:
+# SignUp.jsx design:
 
 https://tailwindflex.com/@laurits/sign-up-with-google-button
 
-
 Pour Google btn, attention de bien adapter pour Vite-React (className par exemple) et finaliser le style.
 
-
 - La div principale : className="p-3 max-w-lg mx-auto"
-  
-- Le titre :  className="text-3xl text-center font-semibold my-7"
-  
+- Le titre : className="text-3xl text-center font-semibold my-7"
 - Le formulaire (form): className="flex flex-col gap-4"
-gap-4 => un espace de 4 unités entre chaque élément du formulaire.
+  gap-4 => un espace de 4 unités entre chaque élément du formulaire.
 
 - les inputs : className="bg-slate-100 p-3 rounded-lg"
 
-- les btns : 
->uppercase transforme le texte en majuscules.
+- les btns :
+  > uppercase transforme le texte en majuscules.
 
-> hover:opacity-95 change l’opacité à 95% lorsque le bouton est survolé. 
+> hover:opacity-95 change l’opacité à 95% lorsque le bouton est survolé.
 
->disabled:opacity-80 change l’opacité à 80% lorsque le bouton est désactivé.
+> disabled:opacity-80 change l’opacité à 80% lorsque le bouton est désactivé.
 
 > hover:bg-slate-300 change la couleur de fond à slate-300 lorsque le bouton est survolé.
 
 - messages : className="flex gap-2 mt-5"
-gap-2 =  un espace de 2 unités entre les éléments.
+  gap-2 = un espace de 2 unités entre les éléments.
 
 # SignUp fonctions :
 
@@ -238,17 +241,19 @@ import { useState } from 'react'; = un Hook qui vous permet d’ajouter un état
 
 Une variable d’état : const [formData, setFormData] = useState({});
 
-Une  fonction qui se déclenche à chaque fois qu’un utilisateur tape dans le champ d’entrée:
-````
+Une fonction qui se déclenche à chaque fois qu’un utilisateur tape dans le champ d’entrée:
+
+```
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
     console.log(formData);
   };
-````
-e.target.id = l’identifiant du champ 
-e.target.value = la valeur saisie 
+```
 
-````
+e.target.id = l’identifiant du champ
+e.target.value = la valeur saisie
+
+```
         <input
           type="text"
           placeholder="Username"
@@ -256,15 +261,17 @@ e.target.value = la valeur saisie
           className="bg-slate-100 p-3 rounded-lg"
           onChange={handleChange}
         />
-````
+```
+
 onChange={handleChange} = un écouteur d’événements
 
 console.log(formData); vous pouvez voir le résultat dans la console
 
-2. 
+2.
 
 - proxy de vite:
-````
+
+```
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 
@@ -280,16 +287,19 @@ export default defineConfig({
   },
   plugins: [react()],
 });
-````
+```
+
 En local on est en http et https donc secure: false,
 
 - le formulaire
-````
-<form onSubmit={handleSubmit} className="flex flex-col gap-4"> 
-````
 
-- la fonction : 
+```
+<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+```
 
+- la fonction :
+
+```
 const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await fetch('/api/auth/signup', {
@@ -302,10 +312,57 @@ const handleSubmit = async (e) => {
     const data = await res.json();
       console.log(data);
 }
-````
+```
 
 - test et vérifier
 
-dans la console.log : { message: 'User created successfully' } 
+dans la console.log : { message: 'User created successfully' }
 
 dans mongoDB vérifier que le nouveau user est créé.
+
+# SignUp ajout des Errors:
+
+const [error, setError] = useState(false);
+
+try > setError(false);
+logique d'envoie
+setLoading(false);
+if (data.success === false) {
+setError(true);
+return;
+}
+catch (error) {
+setError(true);
+}
+````
+ <p className='text-red-700 mt-5'>{error && "Le Pseudo ou l'email est déjà utilisé!"}</p>
+
+````
+
+# SignUp ajout loading:
+
+const [loading, setLoading] = useState(false);
+````
+try > setLoading(true);
+catch (error) {
+setLoading(false);
+}
+````
+- ex avec un btn :
+````
+<button 
+  disabled={loading} 
+  className="">
+    {loading ? 'Loading...' : " S'enregistrer"}
+</button>
+````
+
+# SignUp ajout navigation:
+
+````
+import { Link, useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+
+navigate('/sign-in');
+`````
