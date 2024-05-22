@@ -201,4 +201,9 @@ export default function Header() {
 }
 ````
 
-# SignUp.jsx :
+# SignUp.jsx  design:
+
+https://tailwindflex.com/@laurits/sign-up-with-google-button
+
+
+Pour Google btn, attention de bien adapter pour Vite-React (className par exemple) 
