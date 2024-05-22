@@ -359,10 +359,78 @@ setLoading(false);
 
 # SignUp ajout navigation:
 
-````
 import { Link, useNavigate } from "react-router-dom";
 
 const navigate = useNavigate();
 
 navigate('/sign-in');
-`````
+
+# mot de passe visible et confirmation password
+
+1. oeil
+https://react-icons.github.io/react-icons/
+npm install react-icons --save
+
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+
+````
+  const [visiblePassword, setVisiblePassword] = useState(false);
+  const [visiblePasswordConfirm, setVisiblePasswordConfirm] = useState(false);
+````
+  ````
+  <div className="flex items-center">
+  <input
+    type={visiblePassword ? "text" : "password"}
+    placeholder="Mot de passe"
+    id="password"
+    className="bg-slate-100 p-3 rounded-lg flex-grow"
+    onChange={handleChange}
+  />
+  {visiblePassword ? (
+    <FaEyeSlash onClick={() => setVisiblePassword(false)} className="mx-3" />
+  ) : (
+    <FaEye onClick={() => setVisiblePassword(true)} className="mx-3" />
+  )}
+  </div>
+````
+
+2. passwordConfirm
+
+const [passwordConfirm, setPasswordConfirm] = useState("");
+````
+  const handleChange = (e) => {
+  if (e.target.id === "passwordConfirm") {
+    setPasswordConfirm(e.target.value);
+  } else {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  }
+  };
+````
+
+Dans handleSubmit :
+
+````
+    if (formData.password !== passwordConfirm) {
+      setError("Les mots de passe ne correspondent pas !");
+      return;
+    }
+````    
+
+Dans l'input passwordConfirm :
+````
+<input
+  type={visiblePasswordConfirm ? "text" : "password"}
+  placeholder="Confirmation du mot de passe"
+  id="passwordConfirm"
+  className="bg-slate-100 p-3 rounded-lg flex-grow"
+  onChange={handleChange}
+  value={passwordConfirm}
+/>
+````
+Dans la phrase d'error :
+````
+<p className="text-red-700 mt-5">
+  {error && (typeof error === "string" ? error : "Le Pseudo ou l'email est déjà utilisé!")}
+</p>
+````
