@@ -206,4 +206,106 @@ export default function Header() {
 https://tailwindflex.com/@laurits/sign-up-with-google-button
 
 
-Pour Google btn, attention de bien adapter pour Vite-React (className par exemple) 
+Pour Google btn, attention de bien adapter pour Vite-React (className par exemple) et finaliser le style.
+
+
+- La div principale : className="p-3 max-w-lg mx-auto"
+  
+- Le titre :  className="text-3xl text-center font-semibold my-7"
+  
+- Le formulaire (form): className="flex flex-col gap-4"
+gap-4 => un espace de 4 unités entre chaque élément du formulaire.
+
+- les inputs : className="bg-slate-100 p-3 rounded-lg"
+
+- les btns : 
+>uppercase transforme le texte en majuscules.
+
+> hover:opacity-95 change l’opacité à 95% lorsque le bouton est survolé. 
+
+>disabled:opacity-80 change l’opacité à 80% lorsque le bouton est désactivé.
+
+> hover:bg-slate-300 change la couleur de fond à slate-300 lorsque le bouton est survolé.
+
+- messages : className="flex gap-2 mt-5"
+gap-2 =  un espace de 2 unités entre les éléments.
+
+# SignUp fonctions :
+
+1. Un formulaire avec un champ d’entrée mis à jour avec la nouvelle valeur.
+
+import { useState } from 'react'; = un Hook qui vous permet d’ajouter un état local .
+
+Une variable d’état : const [formData, setFormData] = useState({});
+
+Une  fonction qui se déclenche à chaque fois qu’un utilisateur tape dans le champ d’entrée:
+````
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+    console.log(formData);
+  };
+````
+e.target.id = l’identifiant du champ 
+e.target.value = la valeur saisie 
+
+````
+        <input
+          type="text"
+          placeholder="Username"
+          id="Pseudo"
+          className="bg-slate-100 p-3 rounded-lg"
+          onChange={handleChange}
+        />
+````
+onChange={handleChange} = un écouteur d’événements
+
+console.log(formData); vous pouvez voir le résultat dans la console
+
+2. 
+
+- proxy de vite:
+````
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        secure: false,
+      },
+    },
+  },
+  plugins: [react()],
+});
+````
+En local on est en http et https donc secure: false,
+
+- le formulaire
+````
+<form onSubmit={handleSubmit} className="flex flex-col gap-4"> 
+````
+
+- la fonction : 
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
+      console.log(data);
+}
+````
+
+- test et vérifier
+
+dans la console.log : { message: 'User created successfully' } 
+
+dans mongoDB vérifier que le nouveau user est créé.
