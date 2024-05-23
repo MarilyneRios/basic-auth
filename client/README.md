@@ -527,3 +527,36 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
 ````
 Provider rend le magasin Redux disponible pour tous les composants de l'application. C'est pour cela qu'il enveloppe l'application.
+
+4. créer un dossier user dans redux puis userSlice.js
+
+**initialState** (L'état initial) contient :
+
+  **currentUser** : L'utilisateur actuel, initialement null.
+  **loading** : Un indicateur de chargement, initialement false.
+  **error**: Un indicateur d'erreur, initialement false.
+/////////////////////////////////////////////////////
+  **reducers : Un objet contenant des fonctions de reducers pour manipuler l'état.**
+
+  **signInStart** : Déclenche l'état de chargement lors du début d'une tentative de connexion.
+
+  **signInSuccess** : Met à jour currentUser avec l'utilisateur connecté et réinitialise les indicateurs de chargement et d'erreur.
+
+  **signInFailure** : Met à jour l'indicateur d'erreur avec l'erreur reçue et réinitialise l'indicateur de chargement.
+
+ 5. Ajout reducer dans store.js
+
+ ````
+import {configureStore } from '@reduxjs/toolkit';
+import userReducer from './user/userSlice.js';
+
+export const store = configureStore({
+  reducer: {user: userReducer },
+  middleware: (getDefaultMiddleware) =>  getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+ ```` 
+
+6. SignIn.jsx ajout des reducers
+
