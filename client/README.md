@@ -609,5 +609,85 @@ const handleSubmit = async (e) => {
   };
 ````
 
-7. 
+## Redux persist
 
+https://redux-toolkit.js.org/rtk-query/usage/persistence-and-rehydration
+
+Afin d'éviter de perdre la session après un raffraichissement.
+
+1. install
+npm i redux-persist
+
+2. store.js
+
+> On a plusieurs reducers donc il faut les combiner.
+
+````
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+
+const rootReducer = combineReducers({ user: userReducer });
+
+````
+> persiste reducer
+
+````
+import { persistReducer } from 'redux-persist';
+
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+};
+````
+> Définir le persistConfig
+
+````
+import storage from 'redux-persist/lib/storage';
+
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+};
+````
+
+> persistReducer(persistConfig, rootReducer)
+
+> exporter le persistor
+````
+import { persistReducer, persistStore } from 'redux-persist';
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+
+export const persistor = persistStore(store);
+````
+
+ 3. main.jsx
+
+ ````
+ import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import { store, persistor } from "./redux/store.js";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <PersistGate persistor={persistor} loading={null}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </PersistGate>
+  </Provider>
+);
+````
+
+Maintenant, si on raffraichit la page, le connexion est tjrs active.
