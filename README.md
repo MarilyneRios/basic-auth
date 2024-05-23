@@ -387,6 +387,27 @@ export const errorHandler = (statusCode, message) => {
 };
 ````
 
+et dans index.js ajouter :
+
+
+````
+  app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    return res.status(statusCode).json({
+      success: false,
+      message,
+      statusCode,
+    });
+  });
+````
+
+  **Identification de l'erreur** : Si quelque chose ne va pas, comme un nom d'utilisateur incorrect ou un problème de connexion à la base de données, cette erreur est capturée et envoyée à ce middleware.
+
+  **Préparation de la réponse** : Le middleware vérifie l'erreur et obtient des détails comme le code d'erreur (par exemple, 404 pour "introuvable") et un message explicatif.
+
+  **Envoi de la réponse** : Ensuite, il envoie une réponse JSON contenant ces détails à l'utilisateur, afin qu'il sache ce qui s'est passé.
+
 # signIn route
 
 on vérifie l'identité du user avec l'email et le password.
