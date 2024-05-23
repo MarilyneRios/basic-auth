@@ -462,7 +462,7 @@ Avec ._doc, on renvoie que les infos nécessaires
 
 - date de validité du cookie :
 ````
-const expiryDate = new Date(Date.now() + 3600000); // 1 heure
+const expiryDate = new Date(Date.now() + 28800000); // 8 heures
 ````
 ````
 .cookie('access_token', token, { httpOnly: true, expires: expiryDate })

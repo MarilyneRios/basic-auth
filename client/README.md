@@ -435,4 +435,95 @@ Dans la phrase d'error :
 </p>
 ````
 
-# signIn design
+# signIn design et fcts
+
+copie le signUp et garder seuelement ce qui nous sera utile et apporter quelques modifications
+
+par ex :
+
+````
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [visiblePassword, setVisiblePassword] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      setError(false);
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (data.success === false) {
+        setError(true);
+        return;
+      }
+      navigate("/");
+    } catch (error) {
+      setLoading(false);
+      setError(true);
+    }
+  };
+````
+
+## redux toolkt
+
+Redux est une bibliothèque JavaScript populaire pour la gestion de l’état de l’application. 
+
+https://redux-toolkit.js.org/
+
+npm install @reduxjs/toolkit
+npm install react-redux
+
+1. dans src créer un dossier redux puis un fichier store.js
+
+2. store.js
+
+https://redux-toolkit.js.org/tutorials/overview
+
+````
+import {configureStore } from '@reduxjs/toolkit';
+
+export const store = configureStore({
+  reducer: {},
+  middleware: (getDefaultMiddleware) =>  getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+````
+
+3. main.js
+
+````
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import { store } from "./redux/store.js";
+import { Provider } from "react-redux";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </Provider>
+);
+
+````
+Provider rend le magasin Redux disponible pour tous les composants de l'application. C'est pour cela qu'il enveloppe l'application.

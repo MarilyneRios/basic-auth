@@ -1,0 +1,3 @@
+# Après le 1er test en local du sign-in avant la mise en place de système sécurisé.
+
+Le cookie « access_token » n’a pas de valeur d’attribut « SameSite » appropriée. Bientôt, les cookies dont l’attribut « SameSite » est manquant ou défini avec une valeur invalide seront traités comme « Lax ». Cela signifie que le cookie ne sera plus envoyé dans des contextes tiers. Si votre application dépend de la disponibilité de ce cookie dans de tels contextes, veuillez lui ajouter l’attribut « SameSite=None ». Pour en savoir plus sur l’attribut « SameSite », consultez https://developer.mozilla.org/docs/Web/HTTP/Headers/Set-Cookie/SameSite
