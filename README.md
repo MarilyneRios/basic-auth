@@ -494,3 +494,21 @@ Dans le header de la response:
 il y a une date pour le cookie :
 
 Wed, 22 May 2024 13:35:53 GMT
+
+# routes google
+
+Dans le dossier api > routes > authRoutes.js :
+
+`````
+import express from 'express';
+import { signin, signup, google, signout } from '../controllers/authController.js';
+
+const router = express.Router();
+
+router.post('/signup', signup);
+router.post('/signin', signin);
+router.post('/google', google);
+router.get('/signout', signout);
+
+export default router;
+````

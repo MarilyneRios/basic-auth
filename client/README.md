@@ -813,6 +813,11 @@ const app = initializeApp(firebaseConfig);
 
 Pour firebase.js
 ````
+// Import the functions you need from the SDKs you need
+import { initializeApp, getApps } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
@@ -822,6 +827,16 @@ const firebaseConfig = {
     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGERIESENDERID,
     appId: import.meta.env.VITE_FIREBASE_APPID
 };
+
+// petit changement ici
+// Initialize Firebase
+let app;
+if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+} else {
+    app = getApps()[0];
+}
+export { app };
 
 ````
 
@@ -850,6 +865,8 @@ Puis **Save**
 
 6. Dans OAuth.jsx 
 
+> Créez une instance de l'objet fournisseur Google 
+
 Google Auth Provider:
  ````
  import { GoogleAuthProvider,  } from 'firebase/auth';
@@ -866,3 +883,87 @@ Google Auth Provider:
           }
     };
 ````
+
+https://firebase.google.com/docs/auth/web/google-signin?hl=fr
+
+> Pour vous connecter avec une fenêtre pop-up, appelez signInWithPopup :
+
+> L’instance d’authentification Firebase est obtenue en utilisant la fonction getAuth.
+
+````
+const auth = getAuth(app);
+````
+
+> signInWithPopup : Cette fonction ouvre une fenêtre popup pour que l’utilisateur puisse se connecter avec Google.
+
+7. tester 
+
+
+
+````
+import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
+import { app } from '../firebase';
+
+//....
+
+    const handleGoogleClick = async () => {
+        try{   
+            const provider = new GoogleAuthProvider();
+            const auth = getAuth(app);
+
+            const result = await signInWithPopup(auth, provider);
+            console.log(result)
+        } 
+        catch (error) {
+            console.log('Vous ne pouvez pas vous connectez avec google', error);
+          }
+    };
+````
+On obtient :
+````
+UserCredentialImpl {user: _UserImpl, providerId: 'google.com', _tokenResponse: {…}, operationType: 'signIn'}
+````
+ect.
+
+Dans les metas données on retrouve notre photo :
+https://lh3.googleusercontent.com/a/ACg8ocIJCnVGBWZHi-_9JPK2pU6Abyw01hqQ-B7UgU9xYURVTZ_2ovk=s96-c"
+
+8. Enregistrer les données de google dans la data base
+
+````
+const res = await fetch('/api/auth/google', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: result.user.displayName,
+      email: result.user.email,
+      photo: result.user.photoURL,
+    }),
+});
+````
+
+9. Puis aller dans le dossier api > routes > authRoutes.js :
+
+`````
+import { signin, signup, google, signout } from '../
+
+````
+router.post('/google', google);
+`````
+
+10. Récupération des données de la réponse :
+
+````
+const data = await res.json();
+````
+
+11. Enregistrement des données de l’utilisateur :
+
+````
+dispatch(signInSuccess(data));
+
+````
+
+# 
