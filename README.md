@@ -499,7 +499,7 @@ Wed, 22 May 2024 13:35:53 GMT
 
 Dans le dossier api > routes > authRoutes.js :
 
-`````
+````
 import express from 'express';
 import { signin, signup, google, signout } from '../controllers/authController.js';
 
@@ -512,3 +512,109 @@ router.get('/signout', signout);
 
 export default router;
 ````
+
+## authcontroller
+
+> Recherche de l’utilisateur :
+
+````
+const user = await User.findOne({ email: req.body.email });
+
+````
+
+### 1/ Si l’utilisateur existe déjà : 
+Si un utilisateur avec cet email existe déjà, un token JWT est créé pour cet utilisateur. Ce token est ensuite envoyé au client sous forme de cookie. Enfin, les informations de l’utilisateur (à l’exception du mot de passe) sont renvoyées au client sous forme de JSON.
+
+> crée un token JWT qui contient l’ID du user
+
+````
+ const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+````
+
+> Hacher le password :
+
+````
+const { password: hashedPassword, ...rest } = user._doc;
+````
+> Générer un cookie avec le token :
+
+````
+  const expiryDate = new Date(Date.now() + 28800000); // 8 heures
+  res
+    .cookie('access_token', token, {
+      httpOnly: true,
+      expires: expiryDate,
+    })
+
+````
+> Envoyer une réponse avec le statut :
+
+````
+    .status(200)
+    .json(rest);
+````
+
+#### 2/ Si l’utilisateur n’existe pas encore :
+
+Mais pour créer un compte, nous avons un pbm: avec google, il **manque le username et le password**.
+> Génération d’un mot de passe : Un nouveau mot de passe est généré pour l’utilisateur. Ce mot de passe est une chaîne aléatoire de 16 caractères.
+
+````
+const generatedPassword =
+  Math.random().toString(36).slice(-8) +
+  Math.random().toString(36).slice(-8);
+
+````
+
+> Le haché en utilisant bcryptjs
+
+````
+const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
+````
+
+> Création d’un nouveau user : avec le mot de passe haché, l’email et le nom fournis, et la photo de profil.
+
+Le username est généré en prenant le nom de l’utilisateur, en le convertissant en minuscules, en supprimant les espaces et en ajoutant une chaîne aléatoire de 8 caractères à la fin.
+( username: req.body.name.split(' ').join('').toLowerCase() +  Math.random().toString(36).slice(-8),: Cette partie du code génère une chaîne aléatoire de 8 caractères afin d'avoir un username unique. 
+Ou bien comme ceci : username: req.body.name.split(' ').join('').toLowerCase() + Math.floor(Math.random()*10000).toString()),
+
+````
+const newUser = new User({
+  username:
+    req.body.name.split(' ').join('').toLowerCase() +
+    Math.random().toString(36).slice(-8),
+  email: req.body.email,
+  password: hashedPassword,
+  profilePicture: req.body.photo,
+});
+
+````
+> sauvegarder :
+
+````
+await newUser.save();
+
+````
+
+> Créer un token JWT :
+
+````
+const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+````
+
+> Le token JWT est envoyé au client sous forme de cookie sauf le password.
+
+````
+const { password: hashedPassword2, ...rest } = newUser._doc;
+const expiryDate = new Date(Date.now() + 3600000); // 1 hour
+res
+  .cookie('access_token', token, {
+    httpOnly: true,
+    expires: expiryDate,
+  })
+  .status(200)
+  .json(rest);
+````
+
+# 

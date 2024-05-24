@@ -809,7 +809,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 ````
 
-> 4. sécuriser les données sensible dans un fichier dans src .env et copie le fichier .gitignore
+> 4. sécuriser les données sensible dans un fichier  .env et un fichier .gitignore à la racine du client
 
 Pour firebase.js
 ````
