@@ -4,6 +4,7 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import {  signInStart,signInSuccess, signInFailure,} from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import OAuth from "../components/OAuth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -85,17 +86,8 @@ export default function SignIn() {
         >
           {loading ? "Loading..." : " Se Connecter"}
         </button>
-        <button
-          disabled={loading}
-          className="inline-flex p-3 rounded-lg uppercase w-full items-center justify-center gap-2 border border-slate-700 bg-white hover:bg-slate-300 text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="h-[22px] w-[22px] "
-          />
+          <OAuth disabled={loading} label={"Continue avec Google"}/>
           {loading ? "Loading..." : " Continue avec Google"}
-        </button>
       </form>
       <div className="flex gap-2 mt-5">
         <p>Avez-vous un compte ?</p>

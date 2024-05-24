@@ -691,3 +691,178 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 ````
 
 Maintenant, si on raffraichit la page, le connexion est tjrs active.
+
+ps: pour verifier le local storage : dans l'onglet application > storag > local storage > http://....
+
+key = persist:root
+value = "user":"{\"currentUser\":{\"_id\":\.....}}
+
+# OAuth Google
+
+## Dans components, créer OAuth.jsx
+
+1. rfc
+puis copier le btn google de SignIn.
+et le remplacer par <OAuth>
+
+````
+export default function OAuth() {
+  return (
+    <div>
+      <button
+        className="inline-flex p-3 rounded-lg uppercase w-full items-center justify-center gap-2 border border-slate-700 bg-white hover:bg-slate-300 text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <img
+          src="https://www.svgrepo.com/show/475656/google-color.svg"
+          alt="Google"
+          className="h-[22px] w-[22px] "
+        />
+        {label}
+      </button>
+    </div>
+  );
+}
+
+````
+
+2. SignIn
+````
+import OAuth from "../components/OAuth";
+
+ <OAuth disabled={loading}/>
+ {loading ? "Loading..." : " Continue avec Google"}
+````   
+3. Prépa du OAuth.jsx 
+
+````
+export default function OAuth({label}) {
+
+    const handleGoogleClick = async () => {
+        try{ /* empty */ 
+
+        } 
+        catch (error) {
+            console.log('Vous ne pouvez pas vous connectez avec google', error);
+          }
+    };
+
+  return (
+    <div>
+      <button
+        type='button'
+        onClick={handleGoogleClick}
+        className="inline-flex p-3 rounded-lg uppercase w-full items-center justify-center gap-2 border border-slate-700 bg-white hover:bg-slate-300 text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <img
+          src="https://www.svgrepo.com/show/475656/google-color.svg"
+          alt="Google"
+          className="h-[22px] w-[22px] "
+        />
+         {label}
+      </button>
+    </div>
+  );
+}
+````
+4. firebase
+
+https://firebase.google.com/docs/auth?hl=fr
+
+Un fois inscrit, cliquez sur "Go to Console"
+
+> create a project
+
+> Ecrire le nom du projet : **basic-auth** pour moi
+
+> **désactiver** Enable Google Analytics for this project (projet starter pas besoin)
+
+> Your Firebase project is ready , **continue**
+
+> web app donc on clique sur **</>**
+
+> 1. Register app
+App nickname : **basic-auth**
+cliquer sur **Register **app**
+
+> 2.installer firebase côté CLIENT:
+npm install firebase
+
+
+>3. Créer firebase.js dans src
+````
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "gdffgdgdrgeryrgrgesgdx",
+  authDomain: "basic-auth-fesfesfscwcsfdesfges",
+  projectId: "basic-auth-sdgdsgvsdvsvs",
+  storageBucket: "basic-auth-vdsvsdvsdvsdgvsrgsegse",
+  messagingSenderId: "vsvsdgrgrdgrvfdwvw",
+  appId: "vsevrvrdvxvxdvzswvwrwgzsg"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+````
+
+> 4. sécuriser les données sensible dans un fichier dans src .env et copie le fichier .gitignore
+
+Pour firebase.js
+````
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGEBUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGERIESENDERID,
+    appId: import.meta.env.VITE_FIREBASE_APPID
+};
+
+````
+
+Dans .env :
+
+````
+VITE_FIREBASE_APIKEY=""
+VITE_FIREBASE_AUTHDOMAIN="basic-auth"
+VITE_FIREBASE_PROJECTID="basic-auth-"
+VITE_FIREBASE_STORAGEBUCKET="basic-auth-",
+VITE_FIREBASE_MESSAGERIESENDERID="",
+VITE_FIREBASE_APPID=""
+````
+> cliquer sur continue to console dans firebase
+
+### paramétrer la console de firebase google :
+
+> Build
+> Authentification
+> Get started
+> choisir Google
+> cliquer sur Enable
+> Public-facing name for project : **basic-auth** (le nom sera dans un pop windows)
+et sélectionner **votre email** en dessous
+Puis **Save**
+
+6. Dans OAuth.jsx 
+
+Google Auth Provider:
+ ````
+ import { GoogleAuthProvider,  } from 'firebase/auth';
+
+//----------
+
+    const handleGoogleClick = async () => {
+        try{   
+            const provider = new GoogleAuthProvider();
+
+        } 
+        catch (error) {
+            console.log('Vous ne pouvez pas vous connectez avec google', error);
+          }
+    };
+````
