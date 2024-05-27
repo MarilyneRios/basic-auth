@@ -81,6 +81,7 @@ export default function SignUp() {
             id="password"
             className="bg-slate-100 p-3 rounded-lg flex-grow"
             onChange={handleChange}
+            autoComplete="new-password"
           />
           {visiblePassword ? (
             <FaEyeSlash
@@ -99,6 +100,7 @@ export default function SignUp() {
             className="bg-slate-100 p-3 rounded-lg flex-grow"
             onChange={handleChange}
             value={passwordConfirm}
+            autoComplete="new-password"
           />
           {visiblePasswordConfirm ? (
             <FaEyeSlash

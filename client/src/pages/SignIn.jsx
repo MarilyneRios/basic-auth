@@ -70,6 +70,7 @@ export default function SignIn() {
             id="password"
             className="bg-slate-100 p-3 rounded-lg flex-grow"
             onChange={handleChange}
+            autoComplete="new-password"
           />
           {visiblePassword ? (
             <FaEyeSlash

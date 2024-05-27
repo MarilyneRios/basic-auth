@@ -1,6 +1,9 @@
 import { useSelector } from "react-redux";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'firebase/storage';
+import { app } from '../firebase';
+
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -9,11 +12,56 @@ export default function Profile() {
     email: currentUser.email,
     password: "",
     passwordConfirm: "",
+    profilePicture: currentUser.profilePicture,
   });
   const fileRef = useRef(null);
+  const [image, setImage] = useState(undefined); // au départ pas d'image => undefined
+  const [imagePercent, setImagePercent] = useState(0);
+  const [imageError, setImageError] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visiblePasswordConfirm, setVisiblePasswordConfirm] = useState(false);
+
+  //Si image alors handleFileUpload ()
+  useEffect(() => {
+    if (image) {
+      handleFileUpload(image);
+    }
+  }, [image]);
+
+  // Télécharger d’une image vers Firebase Storage
+  const handleFileUpload = async (image) => {
+    //console.log(image);
+   
+    const storage = getStorage(app);
+    //image unique = new Date().getTime().
+    const fileName = new Date().getTime() + image.name; 
+    // crée une référence (un emplacement) dans Firebase où elle sera stockée.
+    const storageRef = ref(storage, fileName); 
+    // le téléchargement de l’image vers Firebase Storage.
+    const uploadTask = uploadBytesResumable(storageRef, image); 
+    // Gestionnaires d’événements pour suivre la progression du téléchargement et gérer les erreurs.
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          //console.log('Uplaod is ' + progress + '%')
+          //montrer la progression sur l'image
+          setImagePercent(Math.round(progress));
+      },
+      (error) => {
+        console.error(error);
+        setImageError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, profilePicture: downloadURL })
+        );
+      }
+    );
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -37,9 +85,10 @@ export default function Profile() {
           accept='image/*'
           ref={fileRef}
           hidden
+          onChange={(e) => setImage(e.target.files[0])}
         />
         <img
-          src={currentUser.profilePicture}
+          src={formData.profilePicture || currentUser.profilePicture}
           alt="image de profil"
           className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
           onClick={() => fileRef.current.click()}
@@ -67,6 +116,7 @@ export default function Profile() {
             id="password"
             className="bg-slate-100 p-3 rounded-lg flex-grow"
             onChange={handleChange}
+            autoComplete="new-password"
           />
           {visiblePassword ? (
             <FaEyeSlash
@@ -88,6 +138,7 @@ export default function Profile() {
             className="bg-slate-100 p-3 rounded-lg flex-grow"
             onChange={handleChange}
             value={formData.passwordConfirm}
+            autoComplete="new-password"
           />
           {visiblePasswordConfirm ? (
             <FaEyeSlash

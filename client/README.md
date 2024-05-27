@@ -1167,5 +1167,157 @@ onClick={() => fileRef.current.click()}
 
 3. firebase storage
 
+https://firebase.google.com/docs/storage?hl=fr
+
+
+> build 
+
+> Storage
+
+> Get started
+
+> Start in production mode
+  Va falloir changer : allow read, write: if false;
+
+> next
+
+> choisir un cloud storage location proche de nous + Done
+
+>  Rules :
+
+````
+rules_version = '2';
+
+// Craft rules based on data in your Firestore database
+// allow write: if firestore.get(
+//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read;
+      allow write: if
+      request.resource.size < 2 * 1024 * 1024 &&
+      request.resource.contentType.matches('image/.*')
+    }
+  }
+}
+````
+**allow read;** : Cette règle permet à tous les users de lire tous les fichiers.
+
+**allow write: if request.resource.size < 2 * 1024 * 1024 && request.resource.contentType.matches('image/.*')** : Cette règle permet aux users d’écrire (télécharger) des fichiers si deux conditions sont validées :
+
+- La taille du fichier est inférieure à 2 Mo (2 * 1024 * 1024 octets).
+- Le type de contenu du fichier correspond à une image.
+
+4. Récupérer les images dans notre App
+
+````
+const [image, setImage] = useState(undefined);
+````
+
+````
+ <input
+    type='file'        
+    accept='image/*'
+    ref={fileRef}
+    hidden
+    onChange={(e) => setImage(e.target.files[0])}
+  />
+````
+
+> on ajoute un   console.log(image); après  const [image, setImage] = useState(undefined);
+
+````
+ File {
+    name: 'Capture d\'écran 2023-06-12 070848.png',
+    lastModified: 1686546527435,
+    lastModifiedDate: new Date('2023-06-12T05:08:47.000Z'),
+    webkitRelativePath: '',
+    size: 148829,
+    type: 'image/png'
+  }
+````  
+
+> useEffect pour upload dans notre dataBase et notre storage
+
+- Si on a une image alors la fonction handleFileUpload est appelée avec image comme argument.
+
+- Si pas d'image alors rien ne se passe.
+
+````
+ useEffect(() => {
+    if (image) {
+      handleFileUpload(image);
+    }
+  }, [image]);
+````
+
+>  // Télécharger d’une image vers Firebase Storage
+
+1. test la fonction
+```` 
+const handleFileUpload = async (image) => {
+console.log(image);
+};
+```` 
+````
+ File {
+    name: 'Capture d\'écran 2023-06-12 073044.png',
+    lastModified: 1686547843934,
+    lastModifiedDate: new Date('2023-06-12T05:30:43.000Z'),
+    webkitRelativePath: '',
+    size: 79187,
+    type: 'image/png'
+}
+````
+
+2. 
+
+```` 
+import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'firebase/storage';
+//-----
+    const [formData, setFormData] = useState({
+    username: currentUser.username,
+    email: currentUser.email,
+    password: "",
+    passwordConfirm: "",
+    profilePicture: currentUser.profilePicture,
+  });
+//-----
+  const [imagePercent, setImagePercent] = useState(0);
+  const [imageError, setImageError] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+//-----
+  const handleFileUpload = async (image) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + image.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImagePercent(Math.round(progress));
+      },
+      (error) => {
+        setImageError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, profilePicture: downloadURL })
+        );
+      }
+    );
+  };
+
+//-----
+  <img
+    src={formData.profilePicture || currentUser.profilePicture}
+    alt="image de profil"
+    className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
+    onClick={() => fileRef.current.click()}
+  />
+```` 
 
 # 
