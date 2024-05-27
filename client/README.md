@@ -1319,5 +1319,27 @@ import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'fireb
     onClick={() => fileRef.current.click()}
   />
 ```` 
+> Message si pbm image :
 
+````
+  // Vérifier le fichier avant de le télécharger
+  const validateFile = (file) => {
+    if (!file.type.startsWith('image/')) {
+      setImageError("Le fichier doit être une image");
+      return false;
+    }
+    if (file.size > 2 * 1024 * 1024) { // 2 MB
+      setImageError("L'image doit être inférieure à 2 Mo");
+      return false;
+    }
+    setImageError(""); // Réinitialiser les erreurs
+    return true;
+  };
+  ````
+
+
+````
+ {imageError && <p className="text-red-500 text-center">{imageError}</p>}
+
+````
 # 

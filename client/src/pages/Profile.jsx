@@ -1,9 +1,8 @@
 import { useSelector } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
-
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -15,50 +14,59 @@ export default function Profile() {
     profilePicture: currentUser.profilePicture,
   });
   const fileRef = useRef(null);
-  const [image, setImage] = useState(undefined); // au départ pas d'image => undefined
+  const [image, setImage] = useState(undefined);
   const [imagePercent, setImagePercent] = useState(0);
-  const [imageError, setImageError] = useState(false);
+  const [imageError, setImageError] = useState("");
   const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visiblePasswordConfirm, setVisiblePasswordConfirm] = useState(false);
 
-  //Si image alors handleFileUpload ()
+  // Vérifier le fichier avant de le télécharger
+  const validateFile = (file) => {
+    if (!file.type.startsWith('image/')) {
+      setImageError("Le fichier doit être une image");
+      return false;
+    }
+    if (file.size > 2 * 1024 * 1024) { // 2 MB
+      setImageError("L'image doit être inférieure à 2 Mo");
+      return false;
+    }
+    setImageError(""); // Réinitialiser les erreurs
+    return true;
+  };
+
+  // Télécharger l'image vers Firebase Storage
   useEffect(() => {
-    if (image) {
+    if (image && validateFile(image)) {
       handleFileUpload(image);
     }
   }, [image]);
 
-  // Télécharger d’une image vers Firebase Storage
   const handleFileUpload = async (image) => {
-    //console.log(image);
-   
     const storage = getStorage(app);
-    //image unique = new Date().getTime().
-    const fileName = new Date().getTime() + image.name; 
-    // crée une référence (un emplacement) dans Firebase où elle sera stockée.
-    const storageRef = ref(storage, fileName); 
-    // le téléchargement de l’image vers Firebase Storage.
-    const uploadTask = uploadBytesResumable(storageRef, image); 
-    // Gestionnaires d’événements pour suivre la progression du téléchargement et gérer les erreurs.
+    const fileName = new Date().getTime() + image.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
     uploadTask.on(
       'state_changed',
       (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          //console.log('Uplaod is ' + progress + '%')
-          //montrer la progression sur l'image
-          setImagePercent(Math.round(progress));
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImagePercent(Math.round(progress));
       },
       (error) => {
         console.error(error);
-        setImageError(true);
+        setImageError("Erreur lors du téléchargement de l'image");
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, profilePicture: downloadURL })
-        );
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setFormData((prevData) => ({ ...prevData, profilePicture: downloadURL }));
+          setUpdateSuccess(true);
+        }).catch((error) => {
+          console.error(error);
+          setImageError("Erreur lors de l'obtention de l'URL de téléchargement");
+        });
       }
     );
   };
@@ -80,12 +88,17 @@ export default function Profile() {
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      <input
-          type='file'        
+        <input
+          type='file'
           accept='image/*'
           ref={fileRef}
           hidden
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (validateFile(file)) {
+              setImage(file);
+            }
+          }}
         />
         <img
           src={formData.profilePicture || currentUser.profilePicture}
@@ -152,12 +165,14 @@ export default function Profile() {
             />
           )}
         </div>
+        {imageError && <p className="text-red-500 text-center">{imageError}</p>}
         <button
           type="submit"
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
           Mettre à jour
         </button>
+        {updateSuccess && <p className="text-green-500 text-center">Mise à jour réussie!</p>}
       </form>
       <div className="flex justify-between mt-5">
         <span
