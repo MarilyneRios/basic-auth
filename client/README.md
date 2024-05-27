@@ -966,4 +966,32 @@ dispatch(signInSuccess(data));
 
 ````
 
-# 
+# header logique pour connexion et profil
+
+Ici, j'utilise une expression conditionnelle (ou ternaire) 
+si le currentUser est connecté: alors l'image apparaît sinon c'est le bouton qui apparaît .
+
+````
+  {currentUser ? (
+    <img
+       src={currentUser.profilePicture}
+       alt="profile"
+       className="h-8 w-8 rounded-full object-cover"
+       onError={(e) => {
+         e.target.onerror = null;
+         e.target.src = "defaultProfilePicture.png";
+        }}
+          />
+        ) : (
+          <div className="hidden md:flex md:items-center md:ml-auto">
+            <Link to="/sign-in">
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Connexion
+              </button>
+            </Link>
+          </div>
+   )}
+````
