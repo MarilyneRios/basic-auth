@@ -966,7 +966,7 @@ dispatch(signInSuccess(data));
 
 ````
 
-# header logique pour connexion et profil
+# header logique pour connexion ou image
 
 Ici, j'utilise une expression conditionnelle (ou ternaire) 
 si le currentUser est connecté: alors l'image apparaît sinon c'est le bouton qui apparaît .
@@ -995,3 +995,86 @@ si le currentUser est connecté: alors l'image apparaît sinon c'est le bouton q
           </div>
    )}
 ````
+
+# PrivateRoute
+
+1. Dans components créer le fichier PirvateRoute.jsx
+
+````
+import {useSelector} from 'react-redux'
+import { Outlet, Navigate } from 'react-router-dom'
+
+export default function PrivateRoute() {
+    const {currentUser} = useSelector(state => state.user)
+  return currentUser ? <Outlet/> : <Navigate to='/sign-in'/>
+}
+````
+
+Outlet est utilisé pour les routes enfants (des sous-routes) sont insérés.
+ 
+si un user est connecté, alors les routes enfants. Sinon, il redirige vers la page de connexion
+
+2. App.jsx
+
+````
+import PrivateRoute from './components/PrivateRoute';
+
+  <Route element={<PrivateRoute />}>
+     <Route path='/profile' element={<Profile />} />
+  </Route>
+````
+**<PrivateRoute/>**  enveloppe les routes qui doivent être protégées. 
+
+Donc, si un utilisateur est connecté, il peut accéder à ces routes. Sinon, il sera redirigé vers la page de connexion.
+
+# Ajout du btn inscription
+
+````
+ <div className="hidden md:flex md:items-center md:ml-auto">
+   <Link to="/sign-in">
+    <button
+      type="button"
+      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+       Connexion
+    </button>
+    </Link>
+     <Link to="/sign-up">
+       <button
+         type="button"
+           className="m-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+       >
+          Inscription
+       </button>
+     </Link>
+  </div>
+````
+# Réglage en mode petit écran: btn ou img
+
+````
+   
+````
+
+Explications: 
+
+  1. État  isOpen (false):
+       Contrôle l'affichage du menu de navigation en mode mobile.
+
+  2. Accès  currentUser :
+        **useSelector** => état actuel du store Redux et currentUser est null si aucun utilisateur n'est connecté.
+
+  3. Structure principale :
+        La structure est divisée en 3 parties :
+
+          - Logo et boutons de navigation pour **petits écrans** : Contient le logo, les boutons "Connexion" et "Inscription" pour les petits écrans, ainsi que le bouton toggle pour ouvrir/fermer le menu.
+
+          - Liens de navigation : Une liste de liens de navigation (Accueil, À propos) qui s'affiche en fonction de l'état isOpen en mode mobile.
+
+          - Boutons de connexion/inscription ou image de profil : Affiche soit les boutons de connexion et d'inscription si le user  n'est pas connecté, soit l'image de profil si le user est connecté.
+
+  4. Comportement adaptatif :
+        - En mode mobile (défini par les classes md:hidden et md:flex), le menu de navigation et les boutons changent de disposition.
+
+       - Le bouton toggle contrôle l'affichage du menu en mode mobile en modifiant l'état isOpen.
+
+# 
