@@ -1079,4 +1079,93 @@ Explications:
 
 # Profile.jsx style ux
 
-Copier une partie du code de SignUp.jsx et pporter quelques modifications
+Copier une partie du code de SignUp.jsx et pporter quelques modifications.
+
+````
+const [formData, setFormData] = useState({
+    username: currentUser.username,
+    email: currentUser.email,
+    password: "",
+    passwordConfirm: "",
+  });
+````
+````
+  const handleDeleteAccount = () => {};
+
+  const handleSignOut = () => {};
+````
+
+````
+  <img
+     src={currentUser.profilePicture}
+     alt="image de profil"
+     className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
+  />
+
+````
+
+Pour récupérer les datas dans les inputs : 
+
+````
+defaultValue={currentUser.username}
+````
+
+Ajouter de 2 fonctions :
+
+````
+  <div className="flex justify-between mt-5">
+    <span
+       onClick={handleDeleteAccount}
+        className="text-red-700 cursor-pointer"
+    >
+       Delete Account
+    </span>
+
+    <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
+          Sign out
+     </span>
+  </div>
+````
+# Les fonctions pour mettre à jour les images avec firebase
+
+1. input file
+
+````
+<input
+   type='file'        
+   accept='image/*'
+/>
+````
+
+2. Cliquer sur l'image afin de sélectionner un image
+
+> Créer une référence de l'input.
+
+````
+import { useState, useRef } from "react";
+````
+````
+ const fileRef = useRef(null);
+````
+
+````
+ ref={fileRef}
+````
+
+> Dans img, afin d'accéder au téléchargement:
+
+````
+onClick={() => fileRef.current.click()}
+````
+> tester le onclick
+
+> cacher le input file:
+
+````
+ hidden
+````
+
+3. firebase storage
+
+
+# 

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Profile() {
@@ -10,6 +10,7 @@ export default function Profile() {
     password: "",
     passwordConfirm: "",
   });
+  const fileRef = useRef(null);
 
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visiblePasswordConfirm, setVisiblePasswordConfirm] = useState(false);
@@ -31,10 +32,17 @@ export default function Profile() {
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <input
+          type='file'        
+          accept='image/*'
+          ref={fileRef}
+          hidden
+        />
         <img
           src={currentUser.profilePicture}
           alt="image de profil"
           className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
+          onClick={() => fileRef.current.click()}
         />
         <input
           defaultValue={currentUser.username}
