@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { app } from '../firebase';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { app } from "../firebase";
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -24,7 +24,7 @@ export default function Profile() {
 
   // Vérifier le fichier avant de le télécharger
   const validateFile = (file) => {
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       setImageError("Le fichier doit être une image");
       return false;
     }
@@ -50,7 +50,7 @@ export default function Profile() {
     const uploadTask = uploadBytesResumable(storageRef, image);
 
     uploadTask.on(
-      'state_changed',
+      "state_changed",
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setImagePercent(Math.round(progress));
@@ -60,13 +60,19 @@ export default function Profile() {
         setImageError("Erreur lors du téléchargement de l'image");
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setFormData((prevData) => ({ ...prevData, profilePicture: downloadURL }));
-          setUpdateSuccess(true);
-        }).catch((error) => {
-          console.error(error);
-          setImageError("Erreur lors de l'obtention de l'URL de téléchargement");
-        });
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((downloadURL) => {
+            setFormData((prevData) => ({
+              ...prevData,
+              profilePicture: downloadURL,
+            }));
+            setUpdateSuccess(true);
+            setImagePercent(100);
+          })
+          .catch((error) => {
+            console.error(error);
+            setImageError("Erreur lors de l'obtention de l'URL de téléchargement");
+          });
       }
     );
   };
@@ -89,13 +95,14 @@ export default function Profile() {
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <input
-          type='file'
-          accept='image/*'
+          type="file"
+          accept="image/*"
           ref={fileRef}
           hidden
           onChange={(e) => {
             const file = e.target.files[0];
             if (validateFile(file)) {
+              setImagePercent(0); // Réinitialiser le pourcentage à 0 lors de la sélection d'une nouvelle image
               setImage(file);
             }
           }}
@@ -106,6 +113,19 @@ export default function Profile() {
           className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
           onClick={() => fileRef.current.click()}
         />
+
+        <p className="text-sm self-center">
+          {imageError ? (
+            <span className="text-red-700">{imageError}</span>
+          ) : imagePercent > 0 && imagePercent < 100 ? (
+            <span className="text-slate-700">{`Téléchargement: ${imagePercent} %`}</span>
+          ) : imagePercent === 100 ? (
+            <span className="text-green-700">Image téléchargée avec succès</span>
+          ) : (
+            ""
+          )}
+        </p>
+
         <input
           defaultValue={currentUser.username}
           type="text"
@@ -165,14 +185,16 @@ export default function Profile() {
             />
           )}
         </div>
-        {imageError && <p className="text-red-500 text-center">{imageError}</p>}
+
         <button
           type="submit"
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
           Mettre à jour
         </button>
-        {updateSuccess && <p className="text-green-500 text-center">Mise à jour réussie!</p>}
+        {updateSuccess && (
+          <p className="text-green-500 text-center">Mise à jour réussie!</p>
+        )}
       </form>
       <div className="flex justify-between mt-5">
         <span
