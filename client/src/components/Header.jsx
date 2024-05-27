@@ -43,7 +43,7 @@ export default function Header() {
                 <img
                   src={currentUser.profilePicture}
                   alt="profile"
-                  className="h-8 w-8 rounded-full object-cover"
+                  className="h-10 w-10 rounded-full object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "defaultProfilePicture.png";

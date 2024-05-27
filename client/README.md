@@ -1077,4 +1077,6 @@ Explications:
 
        - Le bouton toggle contrôle l'affichage du menu en mode mobile en modifiant l'état isOpen.
 
-# 
+# Profile.jsx style ux
+
+Copier une partie du code de SignUp.jsx et pporter quelques modifications
