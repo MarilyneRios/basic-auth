@@ -617,4 +617,99 @@ res
   .json(rest);
 ````
 
-# 
+# Route pour Update
+
+Rappel : 
+router.post('/update/:id', updateUser);
+
+## Créer dans utils un fichier verifyUser.js
+
+- const verifyToken = un middleware pour Express.js. Cette fonction prend trois arguments : req (la requête), res (la réponse) et next
+
+1. cookie-parser
+
+ C'est un middleware pour Express.js qui facilite la gestion des cookies.
+
+https://www.npmjs.com/package/cookie-parser
+
+> npm i cookie-parser
+
+> **const token** = req.cookies.access_token; : Récupère le token JWT des cookies de la requête.
+
+> **if (!token) return next(errorHandler(401, 'Problem authentication!'));** : Si aucun token n’est présent, la fonction appelle next avec une erreur indiquant que le user n’est pas authentifié.
+
+> **jwt.verify(token, process.env.JWT_SECRET, (err, user) => { ... });** : Vérifie le token JWT. process.env.JWT_SECRET est la clé secrète utilisée pour vérifier le token.
+
+>**if (err) return next(errorHandler(403, 'Token is not valid!'));** : Si une erreur se produit lors de la vérification du token, la fonction appelle next avec une erreur indiquant que le token n’est pas valide.
+
+>**req.user = user; next();** : Si le token est valide, le token est décodé du token et attaché à la requête et la fonction next est appelée pour passer au prochain middleware.
+
+2. index.js
+
+````
+import cookieParser from 'cookie-parser';
+````
+
+````
+app.use(express.json());
+app.use(cookieParser());
+````
+
+3. userRoute.js
+
+````
+import { verifyToken } from '../utils/verifyUser.js';
+
+//------
+router.post('/update/:id', verifyToken, updateUser);
+router.delete('/delete/:id', verifyToken, deleteUser);
+````
+
+4. userController.js
+
+> **if (req.user.id !== req.params.id) { return next(errorHandler(401, 'You can update only your account!')); }** : Vérifie si l’ID de le user dans la requête = l’ID de le user dans les paramètres de l’URL. 
+
+=> Si ce n’est pas le cas, cela signifie que l’utilisateur essaie de mettre à jour un compte qui n’est pas le sien, et une erreur 401 est renvoyée.
+
+
+> **if (req.body.password) { req.body.password = bcryptjs.hashSync(req.body.password, 10); }** : Si un nouveau mot de passe est fourni dans le corps de la requête, il est haché avec bcryptjs avant d’être stocké.
+
+> **const updatedUser = await User.findByIdAndUpdate(req.params.id, { $set: { ... } }, { new: true });** : La méthode **findByIdAndUpdate** de Mongoose pour mettre à jour l’utilisateur dans la base de données. 
+Les nouvelles infos du user sont passées dans l’objet $set. 
+
+L’option **{ new: true }** est une méthode renvoie le user mis à jour plutôt que l’original.
+
+> **const { password, ...rest } = updatedUser._doc;** : Extraire le mot de passe du document user mis à jour. Cela est fait pour que le mot de passe ne soit pas renvoyé dans la réponse.
+
+> **res.status(200).json(rest);** : Une réponse avec un statut 200 et le document utilisateur mis à jour (sans le mot de passe).
+
+> **catch (error) { next(error); }** : Si une erreur se produit à tout moment pendant l’exécution de cette fonction, l’erreur est passée à la prochaine fonction middleware dans la pile Express.js.
+
+5. tester avec thunderClient:
+
+POST : http://localhost:3000/api/auth/signin
+
+Body > JSON > {
+  
+  "email":"test@gmail.com",
+  "password": "test"
+}
+
+récupérer le id et 
+
+POST : http://localhost:3000/api/user/update/id
+{
+  
+  "email":"test@gmail.com",
+  "password": "test"
+}
+
+
+Vous devez voir les infos du user:
+Pour modifier le username:
+
+{
+  "username": "testModif",
+  "email":"test@gmail.com",
+  "password": "test"
+}
