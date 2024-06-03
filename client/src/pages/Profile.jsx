@@ -1,10 +1,22 @@
 import { useSelector } from "react-redux";
 import { useState, useRef, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { app } from "../firebase";
+import { useDispatch } from "react-redux";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice";
 
 export default function Profile() {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     username: currentUser.username,
@@ -28,7 +40,8 @@ export default function Profile() {
       setImageError("Le fichier doit être une image");
       return false;
     }
-    if (file.size > 2 * 1024 * 1024) { // 2 MB
+    if (file.size > 2 * 1024 * 1024) {
+      // 2 MB
       setImageError("L'image doit être inférieure à 2 Mo");
       return false;
     }
@@ -52,7 +65,8 @@ export default function Profile() {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setImagePercent(Math.round(progress));
       },
       (error) => {
@@ -71,7 +85,9 @@ export default function Profile() {
           })
           .catch((error) => {
             console.error(error);
-            setImageError("Erreur lors de l'obtention de l'URL de téléchargement");
+            setImageError(
+              "Erreur lors de l'obtention de l'URL de téléchargement"
+            );
           });
       }
     );
@@ -80,14 +96,33 @@ export default function Profile() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+  //console.log(formData);
 
   const handleDeleteAccount = () => {};
 
   const handleSignOut = () => {};
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) {
+      dispatch(updateUserFailure(error));
+    }
   };
 
   return (
@@ -102,7 +137,7 @@ export default function Profile() {
           onChange={(e) => {
             const file = e.target.files[0];
             if (validateFile(file)) {
-              setImagePercent(0); // Réinitialiser le pourcentage à 0 lors de la sélection d'une nouvelle image
+              setImagePercent(0);
               setImage(file);
             }
           }}
@@ -120,7 +155,9 @@ export default function Profile() {
           ) : imagePercent > 0 && imagePercent < 100 ? (
             <span className="text-slate-700">{`Téléchargement: ${imagePercent} %`}</span>
           ) : imagePercent === 100 ? (
-            <span className="text-green-700">Image téléchargée avec succès</span>
+            <span className="text-green-700">
+              Image téléchargée avec succès
+            </span>
           ) : (
             ""
           )}

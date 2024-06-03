@@ -1342,4 +1342,122 @@ import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'fireb
  {imageError && <p className="text-red-500 text-center">{imageError}</p>}
 
 ````
-# 
+# Update profile fonctions 
+
+## handleChange
+````
+    const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+  console.log(formData);
+````
+on récupère les infos et on les traquent avec le console.log
+
+## handleSubmit
+
+> le squelette
+
+- fetch pour envoyer une requête (POST) HTTP au serveur vers l’URL /api/user/update/${currentUser._id}.
+
+- Le contenu est en format JSON (Content-Type': 'application/json',).
+
+- Les données du formulaire (stockées dans formData) sont converties en JSON et envoyées dans le corps de la requête (body: JSON.stringify(formData)).
+
+- La réponse du serveur est ensuite convertie en objet JavaScript (const data = await res.json();).
+
+- attraper les error ( catch (error) { })
+
+> Redux (gestion des états) > userSlice
+
+on a déjà :
+
+- L’état initial contient trois propriétés :
+
+**currentUser** qui Stocke le user actuellement connecté (initialisé à null).
+**loading** si une opération est en cours (initialisé à false).
+**error**  s’il y a eu une erreur (initialisé à false).
+
+- Trois réducteurs (actions) sont définis :
+
+**signInStart** qui met à jour l’indicateur de chargement et réinitialise l’erreur.
+**signInSuccess** qui met à jour le user avec l’indicateur de chargement et réinitialise l’erreur.
+**signInFailure** qui met à jour l’indicateur de chargement et définit l’erreur avec le message d’erreur fourni.
+
+````
+   updateUserStart: (state) => {
+        state.loading = true;
+      },
+      updateUserSuccess: (state, action) => {
+        state.currentUser = action.payload;
+        state.loading = false;
+        state.error = false;
+      },
+      updateUserFailure: (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      },
+  //------
+  
+  export const {
+    signInStart,
+    signInSuccess,
+    signInFailure,
+    updateUserFailure,
+    updateUserStart,
+    updateUserSuccess,
+  } = userSlice.actions;
+````
+
+**updateUserStart** :
+Au début du processus de mise à jour du user.
+Il met à jour l’indicateur loading à true, indiquant que l’opération est en cours.
+
+**updateUserSuccess** :
+Quand la mise à jour du user réussit.
+Il met à jour l’état currentUser avec les données du user fournies par action.payload.
+Il réinitialise loading à false.
+Il réinitialise error à false.
+
+**updateUserFailure** :
+Quand  la mise à jour de du user échoue.
+Il met à jour loading à false.
+Il définit error avec le message d’erreur fourni dans action.payload.
+
+> Utilisation des nouveaux états dans Profile
+
+````
+import { useDispatch } from 'react-redux';
+import {updateUserStart, updateUserSuccess, updateUserFailure,} from '../redux/user/userSlice';
+
+export default function Profile() {
+  const dispatch = useDispatch();
+//------
+const handleSubmit = async (e) => {
+  e.preventDefault(); // empêche rechargement de la page
+  try {
+    dispatch(updateUserStart()); // indiquer le début du processus de mise à jour
+    const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      method: "POST", //méthode HTTP POST pour envoyer des données au serveur
+      headers: {
+        "Content-Type": "application/json", // le type de contenu comme JSON
+      },
+      body: JSON.stringify(formData), // convertit l'objet formData en chaîne JSON et l'envoie dans le corps de la requête
+    });
+    const data = await res.json(); // attend la réponse du serveur et la convertit en objet JavaScript
+    if (data.success === false) {
+      dispatch(updateUserFailure(data)); //  en cas d'échec de la mise à jour
+      return;
+    }
+    dispatch(updateUserSuccess(data)); //  en cas de mise à jour réussie
+    setUpdateSuccess(true); //  indique une mise à jour réussie
+  } catch (error) {
+    dispatch(updateUserFailure(error)); //  en cas d'échec de la mise à jour en raison d'une erreur
+  }
+};
+
+  //-----------
+
+}  
+
+````
+
