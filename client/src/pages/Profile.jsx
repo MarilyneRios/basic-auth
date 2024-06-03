@@ -17,7 +17,7 @@ import {
 
 export default function Profile() {
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error  } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     username: currentUser.username,
     email: currentUser.email,
@@ -33,6 +33,9 @@ export default function Profile() {
 
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visiblePasswordConfirm, setVisiblePasswordConfirm] = useState(false);
+  
+  const [localError, setLocalError] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
 
   // Vérifier le fichier avant de le télécharger
   const validateFile = (file) => {
@@ -95,6 +98,7 @@ export default function Profile() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+    setLocalError("");
   };
   //console.log(formData);
 
@@ -102,8 +106,13 @@ export default function Profile() {
 
   const handleSignOut = () => {};
 
+ // envoie form
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.passwordConfirm) {
+      setLocalError("Les mots de passe ne correspondent pas !");
+      return;
+    }
     try {
       dispatch(updateUserStart());
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
@@ -223,6 +232,13 @@ export default function Profile() {
           )}
         </div>
 
+        <p className="text-red-700 mt-5">
+          {localError &&
+            (typeof error === "string"
+              ? error
+              : "Les mots de passe ne correspondent pas !")}
+        </p>
+
         <button
           type="submit"
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
@@ -245,6 +261,10 @@ export default function Profile() {
           Sign out
         </span>
       </div>
+      <p className='text-red-700 mt-5'>{error && 'Quelque chose ne pas !'}</p>
+      <p className='text-green-700 mt-5'>
+        {updateSuccess && 'Les modifications sont mise à jour avec succès !'}
+      </p>
     </div>
   );
 }

@@ -1461,3 +1461,57 @@ const handleSubmit = async (e) => {
 
 ````
 
+> Configurer le cookie SameSite
+
+Dans verifyUser.js
+
+````
+export const setTokenCookie = (res, token) => {
+    res.cookie('access_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'None', // Modifier ici pour SameSite=None
+    });
+};
+````
+## Indicateur de chargement
+
+````
+  const { currentUser, loading, error  } = useSelector((state) => state.user);
+
+````
+
+et à la fin du code
+
+````
+ <p className='text-red-700 mt-5'>{error && 'Quelque chose ne pas !'}</p>
+ <p className='text-green-700 mt-5'>
+    {updateSuccess && 'Les modifications sont mise à jour avec succès !'}
+  </p>
+````
+
+## confirmation password
+
+````
+  const [localError, setLocalError] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+````
+````
+ const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.passwordConfirm) {
+      setLocalError("Les mots de passe ne correspondent pas !");
+      return;
+    }
+ //----   
+ }
+````
+
+````
+  <p className="text-red-700 mt-5">
+    {localError &&
+      (typeof error === "string"
+       ? error
+      : "Les mots de passe ne correspondent pas !")}
+  </p>
+````
