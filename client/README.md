@@ -1707,6 +1707,7 @@ const handleSignOut = async () => {
         onClick={handleSignOut}
         className="text-red-700 cursor-pointer ml-4"
         title="Déconnexion"
+        size={25}
       />
   </>
 )}
@@ -1728,6 +1729,7 @@ const handleSignOut = async () => {
        onClick={handleSignOut}
        className="text-red-700 cursor-pointer ml-4"
        title="Déconnexion"
+       size={25}
        />
  </>
 )}
