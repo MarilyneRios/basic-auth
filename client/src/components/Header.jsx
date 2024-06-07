@@ -1,11 +1,24 @@
 import { Link } from "react-router-dom";
 import Logo from "../assets/logoDevBlue.png";
 import { useState } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../redux/user/userSlice";
+import { FaSignOutAlt } from "react-icons/fa";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  const handleSignOut = async () => {
+    try {
+      await fetch("/api/auth/signout");
+      dispatch(signOut());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="bg-slate-200 w-full border-b border-gray-200">
@@ -39,17 +52,25 @@ export default function Header() {
               </>
             )}
             {currentUser && (
-              <Link to="/profile" className="text-black hover:text-blue-800">
-                <img
-                  src={currentUser.profilePicture}
-                  alt="profile"
-                  className="h-10 w-10 rounded-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "defaultProfilePicture.png";
-                  }}
+              <>
+                <Link to="/profile" className="text-black hover:text-blue-800">
+                  <img
+                    src={currentUser.profilePicture}
+                    alt="profile"
+                    className="h-10 w-10 rounded-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "defaultProfilePicture.png";
+                    }}
+                  />
+                </Link>
+                <FaSignOutAlt
+                  onClick={handleSignOut}
+                  className="text-red-700 cursor-pointer ml-4"
+                  title="Déconnexion"
+                  size={25}
                 />
-              </Link>
+              </>
             )}
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -95,17 +116,25 @@ export default function Header() {
         {/* btn ou img */}
         <div className="hidden md:flex md:items-center md:ml-auto">
           {currentUser ? (
-            <Link to="/profile" className="text-black hover:text-blue-800">
-              <img
-                src={currentUser.profilePicture}
-                alt="profile"
-                className="h-8 w-8 rounded-full object-cover"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "defaultProfilePicture.png";
-                }}
+            <>
+              <Link to="/profile" className="text-black hover:text-blue-800">
+                <img
+                  src={currentUser.profilePicture}
+                  alt="profile"
+                  className="h-8 w-8 rounded-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "defaultProfilePicture.png";
+                  }}
+                />
+              </Link>
+              <FaSignOutAlt
+                onClick={handleSignOut}
+                className="text-red-700 cursor-pointer ml-4"
+                title="Déconnexion"
+                size={25}
               />
-            </Link>
+            </>
           ) : (
             <>
               <Link to="/sign-in">

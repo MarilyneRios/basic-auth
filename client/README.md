@@ -334,28 +334,32 @@ return;
 catch (error) {
 setError(true);
 }
-````
+
+```
  <p className='text-red-700 mt-5'>{error && "Le Pseudo ou l'email est déjà utilisé!"}</p>
 
-````
+```
 
 # SignUp ajout loading:
 
 const [loading, setLoading] = useState(false);
-````
+
+```
 try > setLoading(true);
 catch (error) {
 setLoading(false);
 }
-````
+```
+
 - ex avec un btn :
-````
-<button 
-  disabled={loading} 
+
+```
+<button
+  disabled={loading}
   className="">
     {loading ? 'Loading...' : " S'enregistrer"}
 </button>
-````
+```
 
 # SignUp ajout navigation:
 
@@ -368,37 +372,39 @@ navigate('/sign-in');
 # mot de passe visible et confirmation password
 
 1. oeil
-https://react-icons.github.io/react-icons/
-npm install react-icons --save
+   https://react-icons.github.io/react-icons/
+   npm install react-icons --save
 
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 
-````
+```
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visiblePasswordConfirm, setVisiblePasswordConfirm] = useState(false);
-````
-  ````
-  <div className="flex items-center">
-  <input
-    type={visiblePassword ? "text" : "password"}
-    placeholder="Mot de passe"
-    id="password"
-    className="bg-slate-100 p-3 rounded-lg flex-grow"
-    onChange={handleChange}
-  />
-  {visiblePassword ? (
-    <FaEyeSlash onClick={() => setVisiblePassword(false)} className="mx-3" />
-  ) : (
-    <FaEye onClick={() => setVisiblePassword(true)} className="mx-3" />
-  )}
-  </div>
-````
+```
+
+```
+<div className="flex items-center">
+<input
+  type={visiblePassword ? "text" : "password"}
+  placeholder="Mot de passe"
+  id="password"
+  className="bg-slate-100 p-3 rounded-lg flex-grow"
+  onChange={handleChange}
+/>
+{visiblePassword ? (
+  <FaEyeSlash onClick={() => setVisiblePassword(false)} className="mx-3" />
+) : (
+  <FaEye onClick={() => setVisiblePassword(true)} className="mx-3" />
+)}
+</div>
+```
 
 2. passwordConfirm
 
 const [passwordConfirm, setPasswordConfirm] = useState("");
-````
+
+```
   const handleChange = (e) => {
   if (e.target.id === "passwordConfirm") {
     setPasswordConfirm(e.target.value);
@@ -406,19 +412,20 @@ const [passwordConfirm, setPasswordConfirm] = useState("");
     setFormData({ ...formData, [e.target.id]: e.target.value });
   }
   };
-````
+```
 
 Dans handleSubmit :
 
-````
+```
     if (formData.password !== passwordConfirm) {
       setError("Les mots de passe ne correspondent pas !");
       return;
     }
-````    
+```
 
 Dans l'input passwordConfirm :
-````
+
+```
 <input
   type={visiblePasswordConfirm ? "text" : "password"}
   placeholder="Confirmation du mot de passe"
@@ -427,13 +434,15 @@ Dans l'input passwordConfirm :
   onChange={handleChange}
   value={passwordConfirm}
 />
-````
+```
+
 Dans la phrase d'error :
-````
+
+```
 <p className="text-red-700 mt-5">
   {error && (typeof error === "string" ? error : "Le Pseudo ou l'email est déjà utilisé!")}
 </p>
-````
+```
 
 # signIn design et fcts
 
@@ -441,7 +450,7 @@ copie le signUp et garder seuelement ce qui nous sera utile et apporter quelques
 
 par ex :
 
-````
+```
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -479,11 +488,11 @@ par ex :
       setError(true);
     }
   };
-````
+```
 
 ## redux toolkt
 
-Redux est une bibliothèque JavaScript populaire pour la gestion de l’état de l’application. 
+Redux est une bibliothèque JavaScript populaire pour la gestion de l’état de l’application.
 
 https://redux-toolkit.js.org/
 
@@ -496,7 +505,7 @@ npm install react-redux
 
 https://redux-toolkit.js.org/tutorials/overview
 
-````
+```
 import {configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({
@@ -505,11 +514,11 @@ export const store = configureStore({
       serializableCheck: false,
     }),
 });
-````
+```
 
 3. main.js
 
-````
+```
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
@@ -525,58 +534,60 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   </Provider>
 );
 
-````
+```
+
 Provider rend le magasin Redux disponible pour tous les composants de l'application. C'est pour cela qu'il enveloppe l'application.
 
 4. créer un dossier user dans redux puis userSlice.js
 
 **initialState** (L'état initial) contient :
 
-  **currentUser** : L'utilisateur actuel, initialement null.
-  **loading** : Un indicateur de chargement, initialement false.
-  **error**: Un indicateur d'erreur, initialement false.
+**currentUser** : L'utilisateur actuel, initialement null.
+**loading** : Un indicateur de chargement, initialement false.
+**error**: Un indicateur d'erreur, initialement false.
 /////////////////////////////////////////////////////
-  **reducers : Un objet contenant des fonctions de reducers pour manipuler l'état.**
+**reducers : Un objet contenant des fonctions de reducers pour manipuler l'état.**
 
-  **signInStart** : Déclenche l'état de chargement lors du début d'une tentative de connexion.
+**signInStart** : Déclenche l'état de chargement lors du début d'une tentative de connexion.
 
-  **signInSuccess** : Met à jour currentUser avec l'utilisateur connecté et réinitialise les indicateurs de chargement et d'erreur.
+**signInSuccess** : Met à jour currentUser avec l'utilisateur connecté et réinitialise les indicateurs de chargement et d'erreur.
 
-  **signInFailure** : Met à jour l'indicateur d'erreur avec l'erreur reçue et réinitialise l'indicateur de chargement.
+**signInFailure** : Met à jour l'indicateur d'erreur avec l'erreur reçue et réinitialise l'indicateur de chargement.
 
- 5. Ajout reducer dans store.js
+5.  Ajout reducer dans store.js
 
- ````
+```
 import {configureStore } from '@reduxjs/toolkit';
 import userReducer from './user/userSlice.js';
 
 export const store = configureStore({
-  reducer: {user: userReducer },
-  middleware: (getDefaultMiddleware) =>  getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+ reducer: {user: userReducer },
+ middleware: (getDefaultMiddleware) =>  getDefaultMiddleware({
+     serializableCheck: false,
+   }),
 });
- ```` 
+```
 
 6. SignIn.jsx ajout des reducers
 
-````
+```
 import {  signInStart,signInSuccess, signInFailure,} from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-````
+```
+
 useSelector pour obtenir loading et error à partir de l'état global
-````
+
+```
   //const [error, setError] = useState(false);
   //const [loading, setLoading] = useState(false);
   const { loading, error } = useSelector((state) => state.user);
-````  
+```
 
-
-````
+```
  const dispatch = useDispatch();
-````
+```
 
-````
+```
 const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -607,7 +618,7 @@ const handleSubmit = async (e) => {
       dispatch(signInFailure(error));
     }
   };
-````
+```
 
 ## Redux persist
 
@@ -616,21 +627,22 @@ https://redux-toolkit.js.org/rtk-query/usage/persistence-and-rehydration
 Afin d'éviter de perdre la session après un raffraichissement.
 
 1. install
-npm i redux-persist
+   npm i redux-persist
 
 2. store.js
 
 > On a plusieurs reducers donc il faut les combiner.
 
-````
+```
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({ user: userReducer });
 
-````
+```
+
 > persiste reducer
 
-````
+```
 import { persistReducer } from 'redux-persist';
 
 const persistConfig = {
@@ -638,10 +650,11 @@ const persistConfig = {
   version: 1,
   storage,
 };
-````
+```
+
 > Définir le persistConfig
 
-````
+```
 import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
@@ -649,12 +662,13 @@ const persistConfig = {
   version: 1,
   storage,
 };
-````
+```
 
 > persistReducer(persistConfig, rootReducer)
 
 > exporter le persistor
-````
+
+```
 import { persistReducer, persistStore } from 'redux-persist';
 
 export const store = configureStore({
@@ -666,12 +680,12 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
-````
+```
 
- 3. main.jsx
+3.  main.jsx
 
- ````
- import React from "react";
+```
+import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -680,32 +694,32 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <Provider store={store}>
-    <PersistGate persistor={persistor} loading={null}>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </PersistGate>
-  </Provider>
+ <Provider store={store}>
+   <PersistGate persistor={persistor} loading={null}>
+     <React.StrictMode>
+       <App />
+     </React.StrictMode>
+   </PersistGate>
+ </Provider>
 );
-````
+```
 
 Maintenant, si on raffraichit la page, le connexion est tjrs active.
 
 ps: pour verifier le local storage : dans l'onglet application > storag > local storage > http://....
 
 key = persist:root
-value = "user":"{\"currentUser\":{\"_id\":\.....}}
+value = "user":"{\"currentUser\":{\"\_id\":\.....}}
 
 # OAuth Google
 
 ## Dans components, créer OAuth.jsx
 
 1. rfc
-puis copier le btn google de SignIn.
-et le remplacer par <OAuth>
+   puis copier le btn google de SignIn.
+   et le remplacer par <OAuth>
 
-````
+```
 export default function OAuth() {
   return (
     <div>
@@ -723,24 +737,26 @@ export default function OAuth() {
   );
 }
 
-````
+```
 
 2. SignIn
-````
+
+```
 import OAuth from "../components/OAuth";
 
  <OAuth disabled={loading}/>
  {loading ? "Loading..." : " Continue avec Google"}
-````   
-3. Prépa du OAuth.jsx 
+```
 
-````
+3. Prépa du OAuth.jsx
+
+```
 export default function OAuth({label}) {
 
     const handleGoogleClick = async () => {
-        try{ /* empty */ 
+        try{ /* empty */
 
-        } 
+        }
         catch (error) {
             console.log('Vous ne pouvez pas vous connectez avec google', error);
           }
@@ -763,7 +779,8 @@ export default function OAuth({label}) {
     </div>
   );
 }
-````
+```
+
 4. firebase
 
 https://firebase.google.com/docs/auth?hl=fr
@@ -781,15 +798,15 @@ Un fois inscrit, cliquez sur "Go to Console"
 > web app donc on clique sur **</>**
 
 > 1. Register app
-App nickname : **basic-auth**
-cliquer sur **Register **app**
+>    App nickname : **basic-auth**
+>    cliquer sur **Register **app\*\*
 
 > 2.installer firebase côté CLIENT:
-npm install firebase
+> npm install firebase
 
+> 3.  Créer firebase.js dans src
 
->3. Créer firebase.js dans src
-````
+```
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -807,12 +824,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-````
+```
 
-> 4. sécuriser les données sensible dans un fichier  .env et un fichier .gitignore à la racine du client
+> 4. sécuriser les données sensible dans un fichier .env et un fichier .gitignore à la racine du client
 
 Pour firebase.js
-````
+
+```
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -838,18 +856,19 @@ if (!getApps().length) {
 }
 export { app };
 
-````
+```
 
 Dans .env :
 
-````
+```
 VITE_FIREBASE_APIKEY=""
 VITE_FIREBASE_AUTHDOMAIN="basic-auth"
 VITE_FIREBASE_PROJECTID="basic-auth-"
 VITE_FIREBASE_STORAGEBUCKET="basic-auth-",
 VITE_FIREBASE_MESSAGERIESENDERID="",
 VITE_FIREBASE_APPID=""
-````
+```
+
 > cliquer sur continue to console dans firebase
 
 ### paramétrer la console de firebase google :
@@ -860,29 +879,30 @@ VITE_FIREBASE_APPID=""
 > choisir Google
 > cliquer sur Enable
 > Public-facing name for project : **basic-auth** (le nom sera dans un pop windows)
-et sélectionner **votre email** en dessous
-Puis **Save**
+> et sélectionner **votre email** en dessous
+> Puis **Save**
 
-6. Dans OAuth.jsx 
+6. Dans OAuth.jsx
 
-> Créez une instance de l'objet fournisseur Google 
+> Créez une instance de l'objet fournisseur Google
 
 Google Auth Provider:
- ````
- import { GoogleAuthProvider,  } from 'firebase/auth';
+
+```
+import { GoogleAuthProvider,  } from 'firebase/auth';
 
 //----------
 
-    const handleGoogleClick = async () => {
-        try{   
-            const provider = new GoogleAuthProvider();
+   const handleGoogleClick = async () => {
+       try{
+           const provider = new GoogleAuthProvider();
 
-        } 
-        catch (error) {
-            console.log('Vous ne pouvez pas vous connectez avec google', error);
-          }
-    };
-````
+       }
+       catch (error) {
+           console.log('Vous ne pouvez pas vous connectez avec google', error);
+         }
+   };
+```
 
 https://firebase.google.com/docs/auth/web/google-signin?hl=fr
 
@@ -890,39 +910,40 @@ https://firebase.google.com/docs/auth/web/google-signin?hl=fr
 
 > L’instance d’authentification Firebase est obtenue en utilisant la fonction getAuth.
 
-````
+```
 const auth = getAuth(app);
-````
+```
 
 > signInWithPopup : Cette fonction ouvre une fenêtre popup pour que l’utilisateur puisse se connecter avec Google.
 
-7. tester 
+7. tester
 
-
-
-````
+```
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { app } from '../firebase';
 
 //....
 
     const handleGoogleClick = async () => {
-        try{   
+        try{
             const provider = new GoogleAuthProvider();
             const auth = getAuth(app);
 
             const result = await signInWithPopup(auth, provider);
             console.log(result)
-        } 
+        }
         catch (error) {
             console.log('Vous ne pouvez pas vous connectez avec google', error);
           }
     };
-````
+```
+
 On obtient :
-````
+
+```
 UserCredentialImpl {user: _UserImpl, providerId: 'google.com', _tokenResponse: {…}, operationType: 'signIn'}
-````
+```
+
 ect.
 
 Dans les metas données on retrouve notre photo :
@@ -930,7 +951,7 @@ https://lh3.googleusercontent.com/a/ACg8ocIJCnVGBWZHi-_9JPK2pU6Abyw01hqQ-B7UgU9x
 
 8. Enregistrer les données de google dans la data base
 
-````
+```
 const res = await fetch('/api/auth/google', {
     method: 'POST',
     headers: {
@@ -942,7 +963,7 @@ const res = await fetch('/api/auth/google', {
       photo: result.user.photoURL,
     }),
 });
-````
+```
 
 9. Puis aller dans le dossier api > routes > authRoutes.js :
 
@@ -955,23 +976,23 @@ router.post('/google', google);
 
 10. Récupération des données de la réponse :
 
-````
+```
 const data = await res.json();
-````
+```
 
 11. Enregistrement des données de l’utilisateur :
 
-````
+```
 dispatch(signInSuccess(data));
 
-````
+```
 
 # header logique pour connexion ou image
 
-Ici, j'utilise une expression conditionnelle (ou ternaire) 
+Ici, j'utilise une expression conditionnelle (ou ternaire)
 si le currentUser est connecté: alors l'image apparaît sinon c'est le bouton qui apparaît .
 
-````
+```
   {currentUser ? (
     <img
        src={currentUser.profilePicture}
@@ -994,13 +1015,13 @@ si le currentUser est connecté: alors l'image apparaît sinon c'est le bouton q
             </Link>
           </div>
    )}
-````
+```
 
 # PrivateRoute
 
 1. Dans components créer le fichier PirvateRoute.jsx
 
-````
+```
 import {useSelector} from 'react-redux'
 import { Outlet, Navigate } from 'react-router-dom'
 
@@ -1008,28 +1029,29 @@ export default function PrivateRoute() {
     const {currentUser} = useSelector(state => state.user)
   return currentUser ? <Outlet/> : <Navigate to='/sign-in'/>
 }
-````
+```
 
 Outlet est utilisé pour les routes enfants (des sous-routes) sont insérés.
- 
+
 si un user est connecté, alors les routes enfants. Sinon, il redirige vers la page de connexion
 
 2. App.jsx
 
-````
+```
 import PrivateRoute from './components/PrivateRoute';
 
   <Route element={<PrivateRoute />}>
      <Route path='/profile' element={<Profile />} />
   </Route>
-````
-**<PrivateRoute/>**  enveloppe les routes qui doivent être protégées. 
+```
+
+**<PrivateRoute/>** enveloppe les routes qui doivent être protégées.
 
 Donc, si un utilisateur est connecté, il peut accéder à ces routes. Sinon, il sera redirigé vers la page de connexion.
 
 # Ajout du btn inscription
 
-````
+```
  <div className="hidden md:flex md:items-center md:ml-auto">
    <Link to="/sign-in">
     <button
@@ -1048,71 +1070,74 @@ Donc, si un utilisateur est connecté, il peut accéder à ces routes. Sinon, il
        </button>
      </Link>
   </div>
-````
+```
+
 # Réglage en mode petit écran: btn ou img
 
-````
-   
-````
+```
 
-Explications: 
+```
 
-  1. État  isOpen (false):
-       Contrôle l'affichage du menu de navigation en mode mobile.
+Explications:
 
-  2. Accès  currentUser :
-        **useSelector** => état actuel du store Redux et currentUser est null si aucun utilisateur n'est connecté.
+1.  État isOpen (false):
+    Contrôle l'affichage du menu de navigation en mode mobile.
 
-  3. Structure principale :
-        La structure est divisée en 3 parties :
+2.  Accès currentUser :
+    **useSelector** => état actuel du store Redux et currentUser est null si aucun utilisateur n'est connecté.
 
-          - Logo et boutons de navigation pour **petits écrans** : Contient le logo, les boutons "Connexion" et "Inscription" pour les petits écrans, ainsi que le bouton toggle pour ouvrir/fermer le menu.
+3.  Structure principale :
+    La structure est divisée en 3 parties :
 
-          - Liens de navigation : Une liste de liens de navigation (Accueil, À propos) qui s'affiche en fonction de l'état isOpen en mode mobile.
+        - Logo et boutons de navigation pour **petits écrans** : Contient le logo, les boutons "Connexion" et "Inscription" pour les petits écrans, ainsi que le bouton toggle pour ouvrir/fermer le menu.
 
-          - Boutons de connexion/inscription ou image de profil : Affiche soit les boutons de connexion et d'inscription si le user  n'est pas connecté, soit l'image de profil si le user est connecté.
+        - Liens de navigation : Une liste de liens de navigation (Accueil, À propos) qui s'affiche en fonction de l'état isOpen en mode mobile.
 
-  4. Comportement adaptatif :
-        - En mode mobile (défini par les classes md:hidden et md:flex), le menu de navigation et les boutons changent de disposition.
+        - Boutons de connexion/inscription ou image de profil : Affiche soit les boutons de connexion et d'inscription si le user  n'est pas connecté, soit l'image de profil si le user est connecté.
 
-       - Le bouton toggle contrôle l'affichage du menu en mode mobile en modifiant l'état isOpen.
+4.  Comportement adaptatif :
+
+    - En mode mobile (défini par les classes md:hidden et md:flex), le menu de navigation et les boutons changent de disposition.
+
+    - Le bouton toggle contrôle l'affichage du menu en mode mobile en modifiant l'état isOpen.
 
 # Profile.jsx style ux
 
 Copier une partie du code de SignUp.jsx et pporter quelques modifications.
 
-````
+```
 const [formData, setFormData] = useState({
     username: currentUser.username,
     email: currentUser.email,
     password: "",
     passwordConfirm: "",
   });
-````
-````
+```
+
+```
   const handleDeleteAccount = () => {};
 
   const handleSignOut = () => {};
-````
+```
 
-````
+```
   <img
      src={currentUser.profilePicture}
      alt="image de profil"
      className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
   />
 
-````
+```
 
-Pour récupérer les datas dans les inputs : 
+Pour récupérer les datas dans les inputs :
 
-````
+```
 defaultValue={currentUser.username}
-````
+```
 
 Ajouter de 2 fonctions :
 
-````
+```
   <div className="flex justify-between mt-5">
     <span
        onClick={handleDeleteAccount}
@@ -1125,67 +1150,69 @@ Ajouter de 2 fonctions :
           Sign out
      </span>
   </div>
-````
+```
+
 # Les fonctions pour mettre à jour les images avec firebase
 
 1. input file
 
-````
+```
 <input
-   type='file'        
+   type='file'
    accept='image/*'
 />
-````
+```
 
 2. Cliquer sur l'image afin de sélectionner un image
 
 > Créer une référence de l'input.
 
-````
+```
 import { useState, useRef } from "react";
-````
-````
- const fileRef = useRef(null);
-````
+```
 
-````
+```
+ const fileRef = useRef(null);
+```
+
+```
  ref={fileRef}
-````
+```
 
 > Dans img, afin d'accéder au téléchargement:
 
-````
+```
 onClick={() => fileRef.current.click()}
-````
+```
+
 > tester le onclick
 
 > cacher le input file:
 
-````
+```
  hidden
-````
+```
 
 3. firebase storage
 
 https://firebase.google.com/docs/storage?hl=fr
 
-
-> build 
+> build
 
 > Storage
 
 > Get started
 
 > Start in production mode
-  Va falloir changer : allow read, write: if false;
+> Va falloir changer : allow read, write: if false;
 
 > next
 
 > choisir un cloud storage location proche de nous + Done
 
->  Rules :
+> Rules :
 
-````
+```
 rules_version = '2';
 
 // Craft rules based on data in your Firestore database
@@ -1201,33 +1228,34 @@ service firebase.storage {
     }
   }
 }
-````
+```
+
 **allow read;** : Cette règle permet à tous les users de lire tous les fichiers.
 
-**allow write: if request.resource.size < 2 * 1024 * 1024 && request.resource.contentType.matches('image/.*')** : Cette règle permet aux users d’écrire (télécharger) des fichiers si deux conditions sont validées :
+**allow write: if request.resource.size < 2 _ 1024 _ 1024 && request.resource.contentType.matches('image/.\*')** : Cette règle permet aux users d’écrire (télécharger) des fichiers si deux conditions sont validées :
 
-- La taille du fichier est inférieure à 2 Mo (2 * 1024 * 1024 octets).
+- La taille du fichier est inférieure à 2 Mo (2 _ 1024 _ 1024 octets).
 - Le type de contenu du fichier correspond à une image.
 
 4. Récupérer les images dans notre App
 
-````
+```
 const [image, setImage] = useState(undefined);
-````
+```
 
-````
+```
  <input
-    type='file'        
+    type='file'
     accept='image/*'
     ref={fileRef}
     hidden
     onChange={(e) => setImage(e.target.files[0])}
   />
-````
+```
 
-> on ajoute un   console.log(image); après  const [image, setImage] = useState(undefined);
+> on ajoute un console.log(image); après const [image, setImage] = useState(undefined);
 
-````
+```
  File {
     name: 'Capture d\'écran 2023-06-12 070848.png',
     lastModified: 1686546527435,
@@ -1236,7 +1264,7 @@ const [image, setImage] = useState(undefined);
     size: 148829,
     type: 'image/png'
   }
-````  
+```
 
 > useEffect pour upload dans notre dataBase et notre storage
 
@@ -1244,23 +1272,25 @@ const [image, setImage] = useState(undefined);
 
 - Si pas d'image alors rien ne se passe.
 
-````
+```
  useEffect(() => {
     if (image) {
       handleFileUpload(image);
     }
   }, [image]);
-````
+```
 
->  // Télécharger d’une image vers Firebase Storage
+> // Télécharger d’une image vers Firebase Storage
 
 1. test la fonction
-```` 
+
+```
 const handleFileUpload = async (image) => {
 console.log(image);
 };
-```` 
-````
+```
+
+```
  File {
     name: 'Capture d\'écran 2023-06-12 073044.png',
     lastModified: 1686547843934,
@@ -1269,11 +1299,11 @@ console.log(image);
     size: 79187,
     type: 'image/png'
 }
-````
+```
 
-2. 
+2.
 
-```` 
+```
 import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'firebase/storage';
 //-----
     const [formData, setFormData] = useState({
@@ -1318,10 +1348,11 @@ import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'fireb
     className="h-24 w-24 self-center cursor-pointer rounded-full object-cover mt-2"
     onClick={() => fileRef.current.click()}
   />
-```` 
+```
+
 > Message si pbm image :
 
-````
+```
   // Vérifier le fichier avant de le télécharger
   const validateFile = (file) => {
     if (!file.type.startsWith('image/')) {
@@ -1335,29 +1366,31 @@ import {  getDownloadURL,  getStorage,  ref,  uploadBytesResumable,} from 'fireb
     setImageError(""); // Réinitialiser les erreurs
     return true;
   };
-  ````
+```
 
-
-````
+```
  {imageError && <p className="text-red-500 text-center">{imageError}</p>}
 
-````
-# Update profile fonctions 
+```
+
+# Update profile fonctions
 
 ## handleChange
-````
+
+```
     const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
   console.log(formData);
-````
+```
+
 on récupère les infos et on les traquent avec le console.log
 
 ## handleSubmit
 
 > le squelette
 
-- fetch pour envoyer une requête (POST) HTTP au serveur vers l’URL /api/user/update/${currentUser._id}.
+- fetch pour envoyer une requête (POST) HTTP au serveur vers l’URL /api/user/update/${currentUser.\_id}.
 
 - Le contenu est en format JSON (Content-Type': 'application/json',).
 
@@ -1375,7 +1408,7 @@ on a déjà :
 
 **currentUser** qui Stocke le user actuellement connecté (initialisé à null).
 **loading** si une opération est en cours (initialisé à false).
-**error**  s’il y a eu une erreur (initialisé à false).
+**error** s’il y a eu une erreur (initialisé à false).
 
 - Trois réducteurs (actions) sont définis :
 
@@ -1383,7 +1416,7 @@ on a déjà :
 **signInSuccess** qui met à jour le user avec l’indicateur de chargement et réinitialise l’erreur.
 **signInFailure** qui met à jour l’indicateur de chargement et définit l’erreur avec le message d’erreur fourni.
 
-````
+```
    updateUserStart: (state) => {
         state.loading = true;
       },
@@ -1397,7 +1430,7 @@ on a déjà :
         state.error = action.payload;
       },
   //------
-  
+
   export const {
     signInStart,
     signInSuccess,
@@ -1406,7 +1439,7 @@ on a déjà :
     updateUserStart,
     updateUserSuccess,
   } = userSlice.actions;
-````
+```
 
 **updateUserStart** :
 Au début du processus de mise à jour du user.
@@ -1419,13 +1452,13 @@ Il réinitialise loading à false.
 Il réinitialise error à false.
 
 **updateUserFailure** :
-Quand  la mise à jour de du user échoue.
+Quand la mise à jour de du user échoue.
 Il met à jour loading à false.
 Il définit error avec le message d’erreur fourni dans action.payload.
 
 > Utilisation des nouveaux états dans Profile
 
-````
+```
 import { useDispatch } from 'react-redux';
 import {updateUserStart, updateUserSuccess, updateUserFailure,} from '../redux/user/userSlice';
 
@@ -1457,15 +1490,15 @@ const handleSubmit = async (e) => {
 
   //-----------
 
-}  
+}
 
-````
+```
 
 > Configurer le cookie SameSite
 
 Dans verifyUser.js
 
-````
+```
 export const setTokenCookie = (res, token) => {
     res.cookie('access_token', token, {
         httpOnly: true,
@@ -1473,54 +1506,56 @@ export const setTokenCookie = (res, token) => {
         sameSite: 'None', // Modifier ici pour SameSite=None
     });
 };
-````
+```
+
 ## Indicateur de chargement
 
-````
+```
   const { currentUser, loading, error  } = useSelector((state) => state.user);
 
-````
+```
 
 et à la fin du code
 
-````
+```
  <p className='text-red-700 mt-5'>{error && 'Quelque chose ne pas !'}</p>
  <p className='text-green-700 mt-5'>
     {updateSuccess && 'Les modifications sont mise à jour avec succès !'}
   </p>
-````
+```
 
 ## confirmation password
 
-````
+```
   const [localError, setLocalError] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-````
-````
+```
+
+```
  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.passwordConfirm) {
       setLocalError("Les mots de passe ne correspondent pas !");
       return;
     }
- //----   
+ //----
  }
-````
+```
 
-````
+```
   <p className="text-red-700 mt-5">
     {localError &&
       (typeof error === "string"
        ? error
       : "Les mots de passe ne correspondent pas !")}
   </p>
-````
+```
 
 # Delete fct
- 
-## Profile.jsx : handleDeleteAccount 
 
-````
+## Profile.jsx : handleDeleteAccount
+
+```
 const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
@@ -1538,29 +1573,29 @@ const handleDeleteAccount = async () => {
     }
   };
 
-````
+```
 
- - dispatch(deleteUserStart()); =>  la suppression de l'utilisateur a commencé (utile pour afficher un indicateur de chargement).
+- dispatch(deleteUserStart()); => la suppression de l'utilisateur a commencé (utile pour afficher un indicateur de chargement).
 
- - Une requête HTTP DELETE est effectuée vers l'endpoint /api/user/delete/${currentUser._id}, où ${currentUser._id} qui demande au serveur de supprimer l'utilisateur correspondant.
+- Une requête HTTP DELETE est effectuée vers l'endpoint /api/user/delete/${currentUser.\_id}, où ${currentUser.\_id} qui demande au serveur de supprimer l'utilisateur correspondant.
 
- - la réponse
- ````
- // 1. convertie en JSON
- const data = await res.json(); 
- // 2. indique l'échec de la suppression avec les détails de l'erreur
-if (data.success === false) {  
-  dispatch(deleteUserFailure(data));
-  return;
+- la réponse
+
+```
+// 1. convertie en JSON
+const data = await res.json();
+// 2. indique l'échec de la suppression avec les détails de l'erreur
+if (data.success === false) {
+ dispatch(deleteUserFailure(data));
+ return;
 }
 // 3. indique la réussite de la suppression
 dispatch(deleteUserSuccess(data));
-```` 
-
+```
 
 ## redux > user > userSlice.js
 
-````
+```
    deleteUserStart: (state) => {
         state.loading = true;
       },
@@ -1573,8 +1608,9 @@ dispatch(deleteUserSuccess(data));
         state.loading = false;
         state.error = action.payload;
       },
-    
-````    
+
+```
+
 **deleteUserStart** : Déclenché au début de la tentative de suppression, met loading à true.
 
 **deleteUserSuccess** : Déclenché à la réussite de la suppression, réinitialise currentUser à null, et réinitialise loading et error.
@@ -1585,7 +1621,7 @@ dispatch(deleteUserSuccess(data));
 
 ## Profile
 
-````
+```
 import {
   updateUserStart,
   updateUserSuccess,
@@ -1604,18 +1640,18 @@ import {
       console.log(error);
     }
   };
-````
+```
 
 ## redux > user > userSlice.js
 
-````
+```
     signOut: (state) => {
       state.currentUser = null;
       state.loading = false;
       state.error = false;
     },
 
- //------   
+ //------
 
    export const {
     signInStart,
@@ -1629,5 +1665,70 @@ import {
     deleteUserSuccess,
     signOut,
   } = userSlice.actions;
-  
-````
+
+```
+
+## header
+
+```
+import { useSelector, useDispatch } from 'react-redux';
+import { signOut } from "../redux/user/userSlice"; // Importer l'action de déconnexion
+import { FaSignOutAlt } from 'react-icons/fa';
+```
+
+```
+const dispatch = useDispatch();
+
+const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/signout');
+      dispatch(signOut());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+```
+
+```
+{currentUser && (
+  <>
+    <Link to="/profile" className="text-black hover:text-blue-800">
+     <img
+       src={currentUser.profilePicture}
+       alt="profile"
+       className="h-10 w-10 rounded-full object-cover"
+       onError={(e) => {
+         e.target.onerror = null;
+         e.target.src = "defaultProfilePicture.png";
+       }}
+      />
+    </Link>
+      <FaSignOutAlt
+        onClick={handleSignOut}
+        className="text-red-700 cursor-pointer ml-4"
+        title="Déconnexion"
+      />
+  </>
+)}
+//------
+{currentUser ? (
+  <>
+    <Link to="/profile" className="text-black hover:text-blue-800">
+    <img
+       src={currentUser.profilePicture}
+       alt="profile"
+       className="h-8 w-8 rounded-full object-cover"
+       onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = "defaultProfilePicture.png";
+      }}
+    />
+    </Link>
+    <FaSignOutAlt
+       onClick={handleSignOut}
+       className="text-red-700 cursor-pointer ml-4"
+       title="Déconnexion"
+       />
+ </>
+)}
+```

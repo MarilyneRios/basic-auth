@@ -742,3 +742,18 @@ router.delete('/delete/:id', verifyToken, deleteUser);
  - res.status(200).json('User has been deleted...'); : Si la suppression est réussie, une réponse avec un statut 200 (succès) est envoyée, contenant un message JSON indiquant "User has been deleted....".
 
 # signout fct
+
+## authRoute.js
+
+````
+router.get('/signout', signout);
+````
+
+## authController.js
+
+````
+export const signout = (req, res) => {
+    res.clearCookie('access_token').status(200).json('Signout success!');
+}
+
+````
