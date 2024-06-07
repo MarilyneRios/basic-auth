@@ -16,6 +16,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signOut,
 } from "../redux/user/userSlice";
 
 export default function Profile() {
@@ -121,7 +122,14 @@ export default function Profile() {
     }
   };
 
-  const handleSignOut = () => {};
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/signout');
+      dispatch(signOut())
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
  // envoie form
   const handleSubmit = async (e) => {

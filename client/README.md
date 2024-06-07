@@ -1580,3 +1580,54 @@ dispatch(deleteUserSuccess(data));
 **deleteUserSuccess** : Déclenché à la réussite de la suppression, réinitialise currentUser à null, et réinitialise loading et error.
 
 **deleteUserFailure** : Déclenché en cas d'échec de la suppression, met loading à false et met à jour error.
+
+# signout fct
+
+## Profile
+
+````
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
+  signOut,
+} from "../redux/user/userSlice";
+//-------
+ const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/signout');
+      dispatch(signOut())
+    } catch (error) {
+      console.log(error);
+    }
+  };
+````
+
+## redux > user > userSlice.js
+
+````
+    signOut: (state) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = false;
+    },
+
+ //------   
+
+   export const {
+    signInStart,
+    signInSuccess,
+    signInFailure,
+    updateUserFailure,
+    updateUserStart,
+    updateUserSuccess,
+    deleteUserFailure,
+    deleteUserStart,
+    deleteUserSuccess,
+    signOut,
+  } = userSlice.actions;
+  
+````

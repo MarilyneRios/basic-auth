@@ -740,3 +740,5 @@ router.delete('/delete/:id', verifyToken, deleteUser);
  - await User.findByIdAndDelete(req.params.id); => recherche un user  par son identifiant (req.params.id) et le supprime de la base de données.
 
  - res.status(200).json('User has been deleted...'); : Si la suppression est réussie, une réponse avec un statut 200 (succès) est envoyée, contenant un message JSON indiquant "User has been deleted....".
+
+# signout fct
