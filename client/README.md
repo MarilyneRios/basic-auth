@@ -1515,3 +1515,68 @@ et à la fin du code
       : "Les mots de passe ne correspondent pas !")}
   </p>
 ````
+
+# Delete fct
+ 
+## Profile.jsx : handleDeleteAccount 
+
+````
+const handleDeleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error));
+    }
+  };
+
+````
+
+ - dispatch(deleteUserStart()); =>  la suppression de l'utilisateur a commencé (utile pour afficher un indicateur de chargement).
+
+ - Une requête HTTP DELETE est effectuée vers l'endpoint /api/user/delete/${currentUser._id}, où ${currentUser._id} qui demande au serveur de supprimer l'utilisateur correspondant.
+
+ - la réponse
+ ````
+ // 1. convertie en JSON
+ const data = await res.json(); 
+ // 2. indique l'échec de la suppression avec les détails de l'erreur
+if (data.success === false) {  
+  dispatch(deleteUserFailure(data));
+  return;
+}
+// 3. indique la réussite de la suppression
+dispatch(deleteUserSuccess(data));
+```` 
+
+
+## redux > user > userSlice.js
+
+````
+   deleteUserStart: (state) => {
+        state.loading = true;
+      },
+      deleteUserSuccess: (state) => {
+        state.currentUser = null;
+        state.loading = false;
+        state.error = false;
+      },
+      deleteUserFailure: (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      },
+    
+````    
+**deleteUserStart** : Déclenché au début de la tentative de suppression, met loading à true.
+
+**deleteUserSuccess** : Déclenché à la réussite de la suppression, réinitialise currentUser à null, et réinitialise loading et error.
+
+**deleteUserFailure** : Déclenché en cas d'échec de la suppression, met loading à false et met à jour error.

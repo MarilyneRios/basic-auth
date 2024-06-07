@@ -714,3 +714,29 @@ Pour modifier le username:
   "password": "test"
 }
 
+# Delete fct
+
+## userRoute.js
+
+````
+router.delete('/delete/:id', verifyToken, deleteUser);
+````
+
+## userController.js
+
+````
+  if (req.user.id !== req.params.id) {
+    return next(errorHandler(401, 'You can delete only your account!'));
+  }
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json('User has been deleted...');
+  } catch (error) {
+    next(error);
+  }
+````
+ - if (req.user.id !== req.params.id) => vérifie si l'identifiant de l'user authentifié.
+
+ - await User.findByIdAndDelete(req.params.id); => recherche un user  par son identifiant (req.params.id) et le supprime de la base de données.
+
+ - res.status(200).json('User has been deleted...'); : Si la suppression est réussie, une réponse avec un statut 200 (succès) est envoyée, contenant un message JSON indiquant "User has been deleted....".
