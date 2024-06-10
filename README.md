@@ -757,3 +757,40 @@ export const signout = (req, res) => {
 }
 
 ````
+
+# préparation render
+
+1. package.json
+
+````
+ "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
+  },
+  ````
+
+**npm install --prefix client** : Cette commande installe toutes les dépendances répertoriées dans le fichier package.json du répertoire client. L’option --prefix client indique à npm de naviguer vers le répertoire client et d’y exécuter la commande npm install.
+
+**npm run build --prefix client** : Cette commande exécute le script build défini dans le fichier package.json du répertoire client. Le script build est généralement utilisé pour compiler ou transpiler votre code source en un format qui peut être exécuté par le navigateur.
+
+
+2. index.js
+
+````
+const __dirname = path.resolve();
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
+````
+
+Le chemin absolu du répertoire courant => app.use(express.static(path.join(__dirname, '/client/dist')));
+
+Crée un chemin absolu vers le répertoire => app.use(express.static(path.join(__dirname, '/client/dist')));
+
+Envoie le fichier index.html situé dans le répertoire Situé dans le répertoire /client/dist en réponse à la requête => res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+

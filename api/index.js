@@ -8,8 +8,19 @@ import cookieParser from 'cookie-parser';
 dotenv.config();
 connectDB();
 
+// chemin absolu 
+const __dirname = path.resolve();
+
 const app = express();
 const port = process.env.PORT
+
+// chemin absolu 
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
+
 
 // server on port process.env.PORT
 app.listen(port, () => {
