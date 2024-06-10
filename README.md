@@ -779,6 +779,8 @@ export const signout = (req, res) => {
 2. index.js
 
 ````
+import path from 'path';
+
 const __dirname = path.resolve();
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
@@ -788,9 +790,27 @@ app.get('*', (req, res) => {
 });
 ````
 
-Le chemin absolu du répertoire courant => app.use(express.static(path.join(__dirname, '/client/dist')));
+- Le chemin absolu du répertoire courant => app.use(express.static(path.join(__dirname, '/client/dist')));
 
-Crée un chemin absolu vers le répertoire => app.use(express.static(path.join(__dirname, '/client/dist')));
+- Crée un chemin absolu vers le répertoire => app.use(express.static(path.join(__dirname, '/client/dist')));
 
-Envoie le fichier index.html situé dans le répertoire Situé dans le répertoire /client/dist en réponse à la requête => res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+- Envoie le fichier index.html situé dans le répertoire Situé dans le répertoire /client/dist en réponse à la requête => res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+
+# render
+
+1. web service
+
+2. Sélectioner le dossier
+
+3. Remplir
+
+Name: basic-auth
+Region: Frankfurt (EU Central)
+Branch: main
+Root Directory
+Runtime: Node
+Build Command: npm run build
+Start Command: npm start
+
+4. tester 5 min après le temps que tout soit disponible en ligne
 
