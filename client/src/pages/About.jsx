@@ -4,7 +4,7 @@ export default function About() {
   return (
     <div className="px-4 py-12 max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold  mb-4 text-slate-800">
-        A propos de cette App
+        Pourquoi cette application ?
       </h1>
       <p className="mb-4 text-slate-700">
         Suite à une mésaventure, j&apos;ai construis ce modèle
@@ -24,11 +24,11 @@ export default function About() {
         - Le front-end de l&apos;application est construit avec React et
         React-Router-Dom pour le routage côté client.
       </p>
-      <p>
+      <p className="mb-4 text-slate-700">
         - Le back-end est construit avec Node.js et Express puis MongoDB pour la
         base de données noSQL.
       </p>
-      <p>
+      <p className="mb-4 text-slate-700">
         - L&apos;authentification est implémentée en utilisant JSON Web Tokens
         (JWT) et des cookies.
       </p>

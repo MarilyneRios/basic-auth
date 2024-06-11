@@ -36,7 +36,7 @@ export default function Header() {
                 <Link to="/sign-in">
                   <button
                     type="button"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3"
                   >
                     Connexion
                   </button>
@@ -44,7 +44,7 @@ export default function Header() {
                 <Link to="/sign-up">
                   <button
                     type="button"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
+                    className="text-white bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-lg text-sm px-4 py-2 text-center"
                   >
                     Inscription
                   </button>
@@ -140,7 +140,7 @@ export default function Header() {
               <Link to="/sign-in">
                 <button
                   type="button"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3"
                 >
                   Connexion
                 </button>
@@ -148,8 +148,8 @@ export default function Header() {
               <Link to="/sign-up">
                 <button
                   type="button"
-                  className="m-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
-                >
+                  className="text-white bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-lg text-sm px-4 py-2 text-center"
+                  >
                   Inscription
                 </button>
               </Link>

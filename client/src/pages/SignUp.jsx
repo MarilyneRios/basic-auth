@@ -121,17 +121,7 @@ export default function SignUp() {
         >
           {loading ? "Loading..." : " S'enregistrer"}
         </button>
-        <button
-          disabled={loading}
-          className="inline-flex p-3 rounded-lg uppercase w-full items-center justify-center gap-2 border border-slate-700 bg-white hover:bg-slate-300 text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="h-[22px] w-[22px] "
-          />
-          {loading ? "Loading..." : " Continue avec Google"}
-        </button>
+
       </form>
       {/* message si déjà inscrit */}
       <div className="flex gap-2 mt-5">
