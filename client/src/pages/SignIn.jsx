@@ -88,12 +88,12 @@ export default function SignIn() {
           {loading ? "Loading..." : " Se Connecter"}
         </button>
           <OAuth disabled={loading} label={"Continue avec Google"}/>
-          {loading ? "Loading..." : " Continue avec Google"}
+        
       </form>
       <div className="flex gap-2 mt-5">
         <p>Avez-vous un compte ?</p>
         <Link to="/sign-up">
-          <span className="text-blue-500">Iscription</span>
+          <span className="text-blue-500">Inscription</span>
         </Link>
       </div>
       <p className="text-red-700 mt-5">
