@@ -138,6 +138,13 @@ export default function Profile() {
       setLocalError("Les mots de passe ne correspondent pas !");
       return;
     }
+
+    const updatedData = { ...formData };
+    if (!updatedData.password) {
+      delete updatedData.password;
+      delete updatedData.passwordConfirm;
+    }
+
     try {
       dispatch(updateUserStart());
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
@@ -279,11 +286,11 @@ export default function Profile() {
           onClick={handleDeleteAccount}
           className="text-red-700 cursor-pointer"
         >
-          Delete Account
+          Supprimer le compte
         </span>
 
         <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
-          Sign out
+          Déconnexion
         </span>
       </div>
       <p className='text-red-700 mt-5'>{error && 'Quelque chose ne pas !'}</p>
